@@ -1,0 +1,41 @@
+nav.navbar-default.navbar-static-side(role='navigation')
+	.sidebar-collapse
+		ul#side-menu.nav(side-navigation='')
+			li.nav-header
+				span.dropdown.profile-element(dropdown='')
+					a.dropdown-toggle(dropdown-toggle='', href='')
+						span.clear
+							span.block.m-t-xs
+								strong.font-bold {{ main.userName }}
+							span.text-muted.text-xs.block
+								| Example menu
+								b.caret
+					ul.dropdown-menu.animated.fadeInRight.m-t-xs
+						li
+							a(href='') Profile
+						li
+							a(href='') Settings
+						li
+							a(href='') Logout
+				.logo-element
+					| IN+
+			li(ng-class="{active: $state.includes('content')}")
+				a(ui-sref="content")
+					i.fa.fa-th-large
+					span.nav-label Content Management
+					span.fa.arrow
+				ul.nav.nav-second-level(ng-class="{in: $state.includes('content')}")
+					li(ui-sref-active="active")
+						a(ui-sref='content.documents')
+							span.nav-label Documents
+					li(ui-sref-active="active")
+						a(ui-sref='content.types')
+							span.nav-label Types
+					li(ui-sref-active="active")
+						a(ui-sref='content.templates')
+							span.nav-label Templates
+
+			li(ng-class="{active: $state.includes('files')}")
+				a(ui-sref='files')
+					i.fa.fa-th-large
+					span.nav-label File Management

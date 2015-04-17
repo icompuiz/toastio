@@ -1,0 +1,19 @@
+//- App Wrapper
+#wrapper
+
+    //- Navigation
+    div(ng-include="'components/common/navigation/navigation.html'")
+
+    //- Page Wrapper
+    #page-wrapper.gray-bg(class="{{$state.current.name}}")
+
+        //- Top Navbar
+        div(ng-include="'components/common/navigation/topnavbar.html'")
+
+        //- Main View
+        div(ui-view="")
+
+        //- Footer 
+        div(ng-include="'components/common/navigation/footer.html'")
+
+    //- End Wrapper

@@ -1,0 +1,122 @@
+// Clients
+
+module.exports =
+[
+	// ADDRESSING
+	// ==================================================================
+	{
+		name: 'Country',
+		descr: 'A list of countries allowed',
+		category: 'Addressing',
+		specific: false,
+		entries: [
+			{ code: 'US', descr: 'United States' },
+			{ code: 'CA', descr: 'Canada' },
+			{ code: 'MX', descr: 'Mexico' }
+		]
+	},
+	{
+		name: 'StateProv',
+		descr: 'Holds a list USA State and Canada Province Postal Codes',
+		specific: false,
+		category: 'Addressing',
+		entries: [
+			{ code: 'AA', descr: 'MILITARY - AMERICAS' },
+			{ code: 'AB', descr: 'ALBERTA' },
+			{ code: 'AE', descr: 'MILITARY - EUROPE' },
+			{ code: 'AK', descr: 'ALASKA' },
+			{ code: 'AL', descr: 'ALABAMA' },
+			{ code: 'AP', descr: 'MILITARY - PACIFIC' },
+			{ code: 'AR', descr: 'ARKANSAS' },
+			{ code: 'AS', descr: 'AMERICAN SAMOA' },
+			{ code: 'AZ', descr: 'ARIZONA' },
+			{ code: 'BC', descr: 'BRITISH COLUMBIA' },
+			{ code: 'CA', descr: 'CALIFORNIA' },
+			{ code: 'CO', descr: 'COLORADO' },
+			{ code: 'CT', descr: 'CONNECTICUT' },
+			{ code: 'DC', descr: 'DISTRICT OF COLUMBIA' },
+			{ code: 'DE', descr: 'DELAWARE' },
+			{ code: 'FL', descr: 'FLORIDA' },
+			{ code: 'FM', descr: 'FEDERATED STATES OF MICRONESIA' },
+			{ code: 'FP', descr: 'FREEPORT' },
+			{ code: 'GA', descr: 'GEORGIA' },
+			{ code: 'GB', descr: 'GRAND BAHAMA ISLAND' },
+			{ code: 'GU', descr: 'GUAM' },
+			{ code: 'HI', descr: 'HAWAII' },
+			{ code: 'IA', descr: 'IOWA' },
+			{ code: 'ID', descr: 'IDAHO' },
+			{ code: 'IL', descr: 'ILLINOIS' },
+			{ code: 'IN', descr: 'INDIANA' },
+			{ code: 'KS', descr: 'KANSAS' },
+			{ code: 'KY', descr: 'KENTUCKY' },
+			{ code: 'LA', descr: 'LOUISIANA' },
+			{ code: 'MA', descr: 'MASSACHUSETTS' },
+			{ code: 'MB', descr: 'MANITOBA' },
+			{ code: 'MD', descr: 'MARYLAND' },
+			{ code: 'ME', descr: 'MAINE' },
+			{ code: 'MG', descr: 'MAYAGUANA' },
+			{ code: 'MH', descr: 'MARSHALL ISLANDS' },
+			{ code: 'MI', descr: 'MICHIGAN' },
+			{ code: 'MN', descr: 'MINNESOTA' },
+			{ code: 'MO', descr: 'MISSOURI' },
+			{ code: 'MP', descr: 'NORTHERN MARIANA ISLANDS' },
+			{ code: 'MS', descr: 'MISSISSIPPI' },
+			{ code: 'MT', descr: 'MONTANA' },
+			{ code: 'NB', descr: 'NEW BRUNSWICK' },
+			{ code: 'NC', descr: 'NORTH CAROLINA' },
+			{ code: 'ND', descr: 'NORTH DAKOTA' },
+			{ code: 'NE', descr: 'NEBRASKA' },
+			{ code: 'NH', descr: 'NEW HAMPSHIRE' },
+			{ code: 'NJ', descr: 'NEW JERSEY' },
+			{ code: 'NL', descr: 'NEWFOUNDLAND AND LABRADOR' },
+			{ code: 'NM', descr: 'NEW MEXICO' },
+			{ code: 'NP', descr: 'NEW PROVIDENCE' },
+			{ code: 'NS', descr: 'NOVA SCOTIA' },
+			{ code: 'NT', descr: 'NORTHWEST TERRITORIES' },
+			{ code: 'NU', descr: 'NUNAVUT' },
+			{ code: 'NV', descr: 'NEVADA' },
+			{ code: 'NY', descr: 'NEW YORK' },
+			{ code: 'OH', descr: 'OHIO' },
+			{ code: 'OK', descr: 'OKLAHOMA' },
+			{ code: 'ON', descr: 'ONTARIO' },
+			{ code: 'OR', descr: 'OREGON' },
+			{ code: 'PA', descr: 'PENNSYLVANIA' },
+			{ code: 'PE', descr: 'PRINCE EDWARD ISLAND' },
+			{ code: 'PR', descr: 'PUERTO RICO' },
+			{ code: 'PW', descr: 'PALAU' },
+			{ code: 'QC', descr: 'QUEBEC' },
+			{ code: 'RI', descr: 'RHODE ISLAND' },
+			{ code: 'SC', descr: 'SOUTH CAROLINA' },
+			{ code: 'SD', descr: 'SOUTH DAKOTA' },
+			{ code: 'SK', descr: 'SASKATCHEWAN' },
+			{ code: 'TN', descr: 'TENNESSEE' },
+			{ code: 'TX', descr: 'TEXAS' },
+			{ code: 'UT', descr: 'UTAH' },
+			{ code: 'VA', descr: 'VIRGINIA' },
+			{ code: 'VI', descr: 'VIRGIN ISLANDS' },
+			{ code: 'VT', descr: 'VERMONT' },
+			{ code: 'WA', descr: 'WASHINGTON' },
+			{ code: 'WI', descr: 'WISCONSIN' },
+			{ code: 'WV', descr: 'WEST VIRGINIA' },
+			{ code: 'WY', descr: 'WYOMING' },
+			{ code: 'YT', descr: 'YUKON' }
+		]
+	},
+
+	// Disk Image: Types
+	// ==================================================================
+	{
+		name: 'Image Type',
+		descr: 'Holds a list of valid disk image types',
+		category: 'Disk Image',
+		specific: true,
+		entries: [
+			{ code: 'Unknown', descr: 'Unknown' },
+			{ code: 'VHD', descr: 'Microsoft VHD'},
+			{ code: 'VDI', descr: 'Oracle VirtualBox VDI'},
+			{ code: 'VMDK', descr: 'VMWare VMDK'},
+			{ code: 'ISO', descr: 'ISO CD/DVD Format'},
+			{ code: 'Other', descr: 'Other' }
+		]
+	}
+];
