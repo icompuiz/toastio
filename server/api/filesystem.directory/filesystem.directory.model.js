@@ -10,11 +10,7 @@ var FileSystemDirectorySchema = FileSystemItem.schema.extend({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'FileSystemItem'
 	}],
-	path: [],
-	type: {
-		type: String,
-		default: 'folder'
-	}
+	path: []
 });
 
 // enable virtual

@@ -6,11 +6,6 @@ var mongoose = require('mongoose'),
 	_ = require('lodash');
 
 var FileSystemItemSchema = new Schema({
-	org: {
-		require: true,
-		ref: 'Org',
-		type: mongoose.Schema.Types.ObjectId
-	},
 	created: {
 		type: Date,
 		default: Date.now
@@ -23,6 +18,7 @@ var FileSystemItemSchema = new Schema({
 		type: String,
 		default: '',
 		trim: true,
+		require: true
 	},
 	directory: {
 		type: mongoose.Schema.Types.ObjectId,
@@ -77,22 +73,22 @@ FileSystemItemSchema.pre('save', function(preSaveDoneCB) {
 		return preSaveDoneCB();
 	}
 
-	var item = this;
+	var fileItemDoc = this;
 	var conditions = {
-		name: item.name
+		name: fileItemDoc.name
 	};
-	if (item.directory) {
-		conditions.directory = item.directory;
+	if (fileItemDoc.directory) {
+		conditions.directory = fileItemDoc.directory;
 	}
 
 	FileSystemItem.count(conditions).exec(function(err, count) {
 
 		if (count > 0) {
 			// invalidate name
-			item.invalidate('name', 'An item with this name already exists', item.name);
+			fileItemDoc.invalidate('name', 'An file with this name already exists', fileItemDoc.name);
 		}
 
-		item.validate(function(err) {
+		fileItemDoc.validate(function(err) {
 
 			preSaveDoneCB(err);
 
@@ -129,37 +125,6 @@ FileSystemItemSchema.pre('save', function(preSaveDoneCB) {
 
 });
 
-FileSystemItemSchema.pre('save', function(preSaveDoneCB) {
-
-	var _self = this;
-
-	if (!_self.org) {
-
-		_self.getParents(function(err, path) {
-
-			var parent = path[0];
-
-			if (parent) {
-
-				_self.org = parent.org;
-				// console.log(parent);
-
-				preSaveDoneCB();
-
-			} else {
-				preSaveDoneCB();
-			}
-
-		});
-
-
-	} else {
-		preSaveDoneCB();
-
-	}
-
-});
-
 FileSystemItemSchema.methods.getParents = function(sendTree) {
 
 	var FileSystemItem = mongoose.model('FileSystemItem');
@@ -177,7 +142,7 @@ FileSystemItemSchema.methods.getParents = function(sendTree) {
 
 		var query = FileSystemItem.findById(parent);
 
-		query.select('name directory org').exec(function(err, directory) {
+		query.select('name directory').exec(function(err, directory) {
 
 			console.log('model::FileSystemItemSchema::getParents::getParent::findById::enter');
 
@@ -207,13 +172,10 @@ FileSystemItemSchema.methods.getParents = function(sendTree) {
 };
 
 FileSystemItemSchema.plugin(components.accessControl, {
-	inheritFrom: [{
+	inheritFrom: {
 		model: 'FileSystemDirectory',
 		field: 'directory'
-	}, {
-		model: 'Org',
-		field: 'org'
-	}]
+	}
 
 });
 

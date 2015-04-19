@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'),
 	path = require('path'),
 	async = require('async'),
+	mime = require('mime'),
 	_ = require('lodash');
 
 var components = require('../../components');
@@ -136,7 +137,7 @@ exports.uploadFiles = uploadFiles = function uploadFiles(req, res) {
 				var fileData = {
 					name: tmpFile.name,
 					directory: directoryId,
-					type: tmpFile.type
+					type: mime.lookup(tmpFile.name)
 				};
 
 				var FileModel = getFileModelForType(fileData.type);

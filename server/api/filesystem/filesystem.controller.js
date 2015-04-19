@@ -24,6 +24,9 @@ exports.attach = function(FilesystemResource) {
 		req.quer.where({
 			_class: 'FileSystemDirectory'
 		});
+
+		// req.quer.limit(1);
+
 		next();
 
 	});
@@ -31,20 +34,7 @@ exports.attach = function(FilesystemResource) {
 	FilesystemResource.after('get', function(req, res, next) {
 
 		if (!req.params.id) {
-
-			var root = {
-				count: res.locals.bundle.length,
-				items: res.locals.bundle
-			};
-
-			res.locals.bundle = root;
-
-		}
-
-		if (!_.isArray(res.locals.bundle)) {
-			if (res.locals.bundle._class === 'FileSystemDirectory') {
-				return res.locals.bundle.setFullPath(next);
-			}
+			res.locals.bundle = _.first(res.locals.bundle);
 		}
 
 		next();

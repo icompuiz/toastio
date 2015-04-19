@@ -27,7 +27,8 @@ var tasks = {
 	'addRootUser': user.addRootUser,
 	'addPublicUser': user.addPublicUser,
 	'addUsers': user.addUsers, // Depends on Roles
-	'addRoutes': route.add
+	'addRoutes': route.add,
+	'addRootDirectory': filesystemDirectory.root
 };
 
 function seedApplication(seedApplicationCB) {

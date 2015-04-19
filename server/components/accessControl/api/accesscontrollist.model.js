@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
 
+var statusService = require('../../status.service');
 var nesting = require('../../nesting');
 
 var AccessControlListSchema = new Schema({
@@ -179,7 +180,7 @@ AccessControlListSchema.methods.duplicate = function(doc, callback) {
 
 	tasks.userAccessControlEntries = function(nextTask) {
 		var userAccessControlEntries = [];
-		var currentUser = components.statusService.session ? components.statusService.session.user : { _id: null };
+		var currentUser = statusService.session ? statusService.session.user : { _id: null };
 
 
 		async.each(self.userAccessControlEntries, function(userace, duplicateNext) {

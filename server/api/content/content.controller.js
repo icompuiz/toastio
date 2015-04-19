@@ -296,11 +296,12 @@ function getTemplate(content, req, res) {
 
             if (err) {
 
-                res.send(400, err);
+                return components.errors[400](req, res, err);
 
             } else if (!contentType) {
 
-                res.send(404, 'A type must be specified for all items');
+                return components.errors[400](req, res, 'A type must be specified for all items');
+
 
             } else {
                 var template = new Template(contentType.template);
@@ -360,7 +361,6 @@ function getTemplate(content, req, res) {
                                 .map(function(match) {
 
                                     var block = processMatch(match);
-                                    // console.log(block);
                                     return block;
                                 }).forEach(function(block) {
                                     accumulator[block.placeholder] = block.block;
@@ -381,7 +381,7 @@ function getTemplate(content, req, res) {
                             var compiler = compileTemplate(text);
 
                             if (!_.isFunction(compiler)) {
-                                return res.render('404');
+                                return components.errors[404](req, res);
                             }
 
                             compiler(content, function(err, html) {
@@ -390,7 +390,7 @@ function getTemplate(content, req, res) {
                         });
 
                     } else {
-                        res.send(400);
+                        return components.errors[400](req, res);
                     }
 
 
@@ -437,9 +437,8 @@ function getTemplateByPath(req, res) {
     var Document = mongoose.model('Document');
 
     Document.findByPath(contentPath, function(err, contentId) {
-
         if (err) {
-            res.send(404, 'Not Found');
+            return components.errors[404](req, res);
         } else {
             req.params.contentId = contentId;
             getTemplateById(req, res);

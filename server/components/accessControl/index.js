@@ -42,7 +42,10 @@ function AccessControlListPlugin(schema, options) {
 	function checkCurrentUserRights(right, doneCheckingCurrentUserRights, currentUser) {
 		var Group = mongoose.model('Group');
 
-		//return doneCheckingCurrentUserRights(null,true);
+		if (argv['acl'] === 'off') {
+			return doneCheckingCurrentUserRights(null,true);
+		}
+
 		right = right || 'read';
 
 		/* jshint validthis: true */

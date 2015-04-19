@@ -22,7 +22,7 @@ nav.navbar-default.navbar-static-side(role='navigation')
 			li(ng-class="{active: $state.includes('content')}")
 				a(ui-sref="content")
 					i.fa.fa-th-large
-					span.nav-label Content Management
+					span.nav-label Site Content
 					span.fa.arrow
 				ul.nav.nav-second-level(ng-class="{in: $state.includes('content')}")
 					li(ui-sref-active="active")
@@ -38,4 +38,4 @@ nav.navbar-default.navbar-static-side(role='navigation')
 			li(ng-class="{active: $state.includes('files')}")
 				a(ui-sref='files')
 					i.fa.fa-th-large
-					span.nav-label File Management
+					span.nav-label Files and Media
