@@ -3,6 +3,7 @@ nav.navbar-default.navbar-static-side(role='navigation')
 		ul#side-menu.nav(side-navigation='')
 			li.nav-header
 				span.dropdown.profile-element(dropdown='')
+					img.img-circle(src="http://placehold.it/48x48.png")
 					a.dropdown-toggle(dropdown-toggle='', href='')
 						span.clear
 							span.block.m-t-xs
@@ -13,30 +14,30 @@ nav.navbar-default.navbar-static-side(role='navigation')
 							a(ui-sref="settings.users({ userid: main.session.user._id })") Profile
 						li
 							a(ng-click="main.logout()") Logout
-				.logo-element.bree-serif
-					span.tc-red T
-					span.tc-blue C
+				.logo-element.bree-serif tcms
+			
+			li(ng-class="{active: $state.includes('home')}")
+				a(ui-sref='main.home')
+					i.fa.fa-home
+					span.nav-label Home
+
 			li(ng-class="{active: $state.includes('content')}")
 				a(ui-sref="content")
-					i.fa.fa-th-large
+					i.fa.fa-sitemap
 					span.nav-label Site Content
 					span.fa.arrow
 				ul.nav.nav-second-level(ng-class="{in: $state.includes('content')}")
 					li(ui-sref-active="active")
-						a(ui-sref='documents.list')
-							span.nav-label Documents
+						a(ui-sref='documents.list') Documents
 					li(ui-sref-active="active")
-						a(ui-sref='types.list')
-							span.nav-label Types
+						a(ui-sref='types.list') Types
 					li(ui-sref-active="active")
-						a(ui-sref='templates.list')
-							span.nav-label Templates
+						a(ui-sref='templates.list') Templates
 					li(ui-sref-active="active")
-						a(ui-sref='blocks.list')
-							span.nav-label Blocks
+						a(ui-sref='blocks.list') Blocks
 					li(ui-sref-active="active")
-						a(ui-sref='scripts.list')
-							span.nav-label Scripts
+						a(ui-sref='scripts.list') Scripts
+
 
 			li(ng-class="{active: $state.includes('media')}")
 				a(ui-sref='media')
@@ -50,5 +51,6 @@ nav.navbar-default.navbar-static-side(role='navigation')
 					span.fa.arrow
 				ul.nav.nav-second-level(ng-class="{in: $state.includes('settings')}")
 					li(ui-sref-active="active")
-						a(ui-sref='settings.variables')
-							span.nav-label Variables
+						a(ui-sref='settings.variables') Variables
+					li(ui-sref-active="active")
+						a(ui-sref='settings.accounts') Accounts
