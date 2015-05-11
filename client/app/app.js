@@ -12,6 +12,7 @@ angular.module('toastio', [
 				'inspinia'
 		])
 		.config(function($stateProvider, $urlRouterProvider, $locationProvider, RestangularProvider, $ocLazyLoadProvider) {
+
 				$urlRouterProvider
 						.otherwise('/toastio/home');
 

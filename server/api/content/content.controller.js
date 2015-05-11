@@ -287,9 +287,12 @@ function compileTemplate(template) {
 function getTemplate(content, req, res) {
     var Type = mongoose.model('Type');
     var Template = mongoose.model('Template');
+
+    // first get the path to this template
     content.getPath(function(err, path) {
         content.path = path;
 
+        // populte the content's type
         Type.populate(content.type, {
             path: 'template'
         }, function(err, contentType) {
@@ -304,6 +307,8 @@ function getTemplate(content, req, res) {
 
 
             } else {
+
+                // populate the tree stack and compose blocks
                 var template = new Template(contentType.template);
 
                 template.getTreeStack(function(err, stack) {
@@ -343,8 +348,7 @@ function getTemplate(content, req, res) {
                     function findBlocks(stack, accumulator, callback) {
 
                         var currentNode = stack.shift();
-
-
+                        
                         if (accumulator) {
                             var keys = _.keys(accumulator);
                             keys.forEach(function(key) {

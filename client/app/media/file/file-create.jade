@@ -1,0 +1,25 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		h2 Site Resources
+		ol.breadcrumb(ng-if="formdata.directory")
+			li(ng-if="siteroot")
+				a(ui-sref="media") {{ siteroot.name }}
+			li(ng-repeat="folder in folders")
+				a(ui-sref="media.folder({ folderid: folder._id })") {{ folder.name }}
+			li.active
+				strong {{ formdata.name }}
+
+.wrapper.wrapper-content.animated.fadeIn
+	.row
+		.col-lg-12
+			.ibox.float-e-margins
+				.ibox-title
+					h5 Dropzone Area
+				.ibox-content
+					form#file-dropzone.dropzone(action='', drop-zone='dropZoneOptions')
+						a.btn.btn-primary.pull-right(ui-sref="media.folder({ folderid: formdata._id })") Back to Folder         
+					div
+						.m.text-right
+							small
+								| DropzoneJS is an open source library that provides drag&apos;n&apos;drop file uploads with image previews: 
+								a(href='https://github.com/enyo/dropzone', target='_blank') https://github.com/enyo/dropzone

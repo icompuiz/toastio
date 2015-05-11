@@ -1,0 +1,32 @@
+.appsplash {
+	width: 100%;
+	height: auto;
+}
+
+.wrapper-login {
+	height: 100%;
+	// width: 100%;
+	// background: #f3f3f4;
+}
+
+.wrapper-login-form {
+
+	width: 400px;
+	background: rgba(255,255,255, 1);
+	border: solid 1px #eaeaea;
+	border-radius: 5px;
+	padding: 15px;
+	margin: 0 auto;
+	// margin-top: 15px;
+
+}
+
+.link-forgotpassword {
+	text-align: right;
+	display: block;
+}
+
+.text-noaccount {
+	text-align: center;
+	display: block;
+}

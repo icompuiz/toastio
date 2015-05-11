@@ -205,7 +205,7 @@ var addPermissionChecks = function(resource, model) {
 
 					checkDocument(item, 'read', function(err, allowed, doc) {
 						if (err) {
-							return res.send(err, allowed);
+							return res.status(400).send(allowed);
 						}
 
 						if (allowed) {
@@ -263,13 +263,13 @@ var addPermissionChecks = function(resource, model) {
 					_id: req.params.id
 				}, 'read', function(err, allowed, doc, action) {
 					if (err) {
-						return res.send(err, allowed);
+						return res.status(err.errorCode || 400).send(allowed);
 					}
 					if (allowed) {
 						next();
 					} else {
 						console.log('Action', action, 'denied for user', req.user.username, 'on', model.modelName, 'resource', doc._id, ', Send 403');
-						return res.send(403);
+						return res.status(403);
 					}
 				});
 			} else {
@@ -279,13 +279,13 @@ var addPermissionChecks = function(resource, model) {
 		.before('put', function(req, res, next) {
 			checkDocumentById(req.body, 'modify', function(err, allowed, doc, action) {
 				if (err) {
-					return res.send(err, allowed);
+					return res.status(400).send(allowed);
 				}
 				if (allowed) {
 					next();
 				} else {
 					console.log('Action', action, 'denied for user', req.user.username, 'on', model.modelName, 'resource', doc._id, ', Send 403');
-					return res.send(403);
+					return res.status(403);
 				}
 			});
 
@@ -295,13 +295,13 @@ var addPermissionChecks = function(resource, model) {
 				_id: req.params.id
 			}, 'remove', function(err, allowed, doc, action) {
 				if (err) {
-					return res.send(err, allowed);
+					return res.status(400).send(allowed);
 				}
 				if (allowed) {
 					next();
 				} else {
 					console.log('Action', action, 'denied for user', req.user.username, 'on', model.modelName, 'resource', doc._id, ', Send 403');
-					return res.send(403);
+					return res.status(403);
 				}
 			});
 		});

@@ -34,7 +34,7 @@ module.exports = function(grunt) {
         },
         express: {
             options: {
-                port: process.env.PORT || 9000
+                port: process.env.PORT || 9001
             },
             dev: {
                 options: {
@@ -245,7 +245,7 @@ module.exports = function(grunt) {
         // Automatically inject Bower components into the app
         wiredep: {
             target: {
-                src: '<%= yeoman.client %>/index.html',
+                src: '<%= yeoman.client %>/client.html',
                 ignorePath: '<%= yeoman.client %>/',
                 exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/', /bootstrap.css/, /font-awesome.css/]
             }
@@ -269,7 +269,7 @@ module.exports = function(grunt) {
         // concat, minify and revision files. Creates configurations in memory so
         // additional tasks can operate on them
         useminPrepare: {
-            html: ['<%= yeoman.client %>/index.html'],
+            html: ['<%= yeoman.client %>/client.html'],
             options: {
                 dest: '<%= yeoman.dist %>/client'
             }
@@ -379,7 +379,7 @@ module.exports = function(grunt) {
                         'bower_components/**/*',
                         'assets/images/{,*/}*.{webp}',
                         'assets/fonts/**/*',
-                        'index.html'
+                        'client.html'
                     ]
                 }, {
                     expand: true,
@@ -582,7 +582,7 @@ module.exports = function(grunt) {
             options: {
 
             },
-            // Inject application script files into index.html (doesn't include bower)
+            // Inject application script files into client.html (doesn't include bower)
             scripts: {
                 options: {
                     transform: function(filePath) {
@@ -594,7 +594,7 @@ module.exports = function(grunt) {
                     endtag: '<!-- endinjector -->'
                 },
                 files: {
-                    '<%= yeoman.client %>/index.html': [
+                    '<%= yeoman.client %>/client.html': [
                         [
                             '{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
                             '!{.tmp,<%= yeoman.client %>}/app/app.js',
@@ -629,7 +629,7 @@ module.exports = function(grunt) {
                 }
             },
 
-            // Inject component css into index.html
+            // Inject component css into client.html
             css: {
                 options: {
                     transform: function(filePath) {
@@ -641,7 +641,7 @@ module.exports = function(grunt) {
                     endtag: '<!-- endinjector -->'
                 },
                 files: {
-                    '<%= yeoman.client %>/index.html': [
+                    '<%= yeoman.client %>/client.html': [
                         '<%= yeoman.client %>/{app,components}/**/*.css',
                         '!<%= yeoman.client %>/components/oclazyload/examples/**/*.css'
                     ]

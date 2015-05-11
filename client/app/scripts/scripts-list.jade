@@ -1,0 +1,31 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		a(ui-sref="scripts.list({ scriptid: null })")
+			h2 Scripts
+.wrapper.wrapper-content
+	.row
+		.col-lg-3
+			.ibox.float-e-margins
+				.ibox-content
+					button.btn.btn-primary.btn-block(ui-sref="scripts.add({ parentid: formdata._id })") Create Script
+		.col-lg-9.animated.fadeInRight
+			.row
+				.col-lg-12
+					.file-box(ng-repeat="script in scripts")
+						.file
+							span.corner
+							.icon
+								a(ui-sref="scripts.edit({ scriptid: script._id })")
+									i.fa.fa-code
+							.file-name
+								a(ui-sref="scripts.edit({ scriptid: script._id })")
+									| {{ script.name }}
+									br
+								small Added: {{ script.created | date }}
+								.pull-right
+									.dropdown(dropdown="")
+										.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+											i.fa.fa-chevron-down
+										ul.dropdown-menu.animated.fadeInRight
+											li
+												a(ng-click="delete(script)") Delete

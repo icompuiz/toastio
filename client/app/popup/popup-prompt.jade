@@ -1,0 +1,10 @@
+div.modal-content
+	div.modal-header
+		button.close(type="button", data-dismiss="modal", aria-hidden="true", ng-click="reject()") &times;
+		h4.modal-title
+			| {{ popup.options.title }}
+	div.modal-body
+			p {{ popup.message }}
+	div.modal-footer
+		button.btn.btn-default(type="button", data-dismiss="modal", ng-click="accept()") OK
+		button.btn.btn-default(type="button", data-dismiss="modal", ng-click="reject()") Cancel

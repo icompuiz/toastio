@@ -82,7 +82,7 @@ module.exports = function(app) {
   addRestfulEndpoint(require('./api/document'), '/api/documents');
   addRestfulEndpoint(require('./api/filesystem.file'), '/api/files');
   addRestfulEndpoint(require('./api/filesystem.directory'), '/api/directories');
-  addRestfulEndpoint(require('./api/filesystem'), '/api/fileSystem');
+  addRestfulEndpoint(require('./api/filesystem'), '/api/filesystem');
   addRestfulEndpoint(require('./api/group'), '/api/groups');
   addRestfulEndpoint(require('./api/user'), '/api/users');
   
@@ -96,12 +96,12 @@ module.exports = function(app) {
   app.route('/toastio')
     .get(function(req, res) {
       console.log("Entering CMS");
-      res.sendFile(path.resolve(app.get('appPath') + '/toastio.html'));
+      res.sendFile(path.resolve(app.get('appPath') + '/client.html'));
     });
   app.route('/toastio/*')
     .get(function(req, res) {
       console.log("Entering CMS");
-      res.sendFile(path.resolve(app.get('appPath') + '/toastio.html'));
+      res.sendFile(path.resolve(app.get('appPath') + '/client.html'));
     });
 
   addEndpoint(require('./api/content'));

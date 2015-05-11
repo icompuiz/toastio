@@ -1,0 +1,29 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		h2 Site Resources
+		ol.breadcrumb
+			li(ng-if="siteroot")
+				a(ui-sref="media") {{ siteroot.name }}
+			li(ng-repeat="folder in folders")
+				a(ui-sref="media.folder({ folderid: folder._id })") {{ folder.name }}
+			li.active
+				strong {{ formdata.name }}
+
+.wrapper.wrapper-content.animated.fadeInRight
+	.row
+		.col-lg-12
+			form.form(name="FolderForm", ng-submit="submit()")
+				.ibox.float-e-margins
+					.ibox-title 
+						h5 New Folder
+						.btn-toolbar.pull-right
+							a.btn.btn-xs.btn-white(ng-click="cancel()") Cancel
+							button.btn.btn-xs.btn-primary Save Changes
+					.ibox-content
+							.form-group
+								label.control-label Name
+								input.form-control(type="text", placeholder="Folder Name", ng-model="formdata.name", required="true")
+
+							.form-group
+								label.control-label Alias
+								input.form-control(type="text", placeholder="Folder Alias", ng-model="formdata.alias", required="true")

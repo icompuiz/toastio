@@ -6,19 +6,16 @@ nav.navbar-default.navbar-static-side(role='navigation')
 					a.dropdown-toggle(dropdown-toggle='', href='')
 						span.clear
 							span.block.m-t-xs
-								strong.font-bold {{ main.userName }}
-							span.text-muted.text-xs.block
-								| Example menu
+								strong.small.font-bold {{ main.session.user.username }}
 								b.caret
 					ul.dropdown-menu.animated.fadeInRight.m-t-xs
 						li
-							a(href='') Profile
+							a(ui-sref="settings.users({ userid: main.session.user._id })") Profile
 						li
-							a(href='') Settings
-						li
-							a(href='') Logout
-				.logo-element
-					| IN+
+							a(ng-click="main.logout()") Logout
+				.logo-element.bree-serif
+					span.tc-red T
+					span.tc-blue C
 			li(ng-class="{active: $state.includes('content')}")
 				a(ui-sref="content")
 					i.fa.fa-th-large
@@ -26,16 +23,32 @@ nav.navbar-default.navbar-static-side(role='navigation')
 					span.fa.arrow
 				ul.nav.nav-second-level(ng-class="{in: $state.includes('content')}")
 					li(ui-sref-active="active")
-						a(ui-sref='content.documents')
+						a(ui-sref='documents.list')
 							span.nav-label Documents
 					li(ui-sref-active="active")
-						a(ui-sref='content.types')
+						a(ui-sref='types.list')
 							span.nav-label Types
 					li(ui-sref-active="active")
-						a(ui-sref='content.templates')
+						a(ui-sref='templates.list')
 							span.nav-label Templates
+					li(ui-sref-active="active")
+						a(ui-sref='blocks.list')
+							span.nav-label Blocks
+					li(ui-sref-active="active")
+						a(ui-sref='scripts.list')
+							span.nav-label Scripts
 
-			li(ng-class="{active: $state.includes('files')}")
-				a(ui-sref='files')
-					i.fa.fa-th-large
-					span.nav-label Files and Media
+			li(ng-class="{active: $state.includes('media')}")
+				a(ui-sref='media')
+					i.fa.fa-files-o
+					span.nav-label Site Resources
+
+			li(ng-class="{active: $state.includes('settings')}")
+				a(ui-sref="settings")
+					i.fa.fa-cogs
+					span.nav-label Site Settings
+					span.fa.arrow
+				ul.nav.nav-second-level(ng-class="{in: $state.includes('settings')}")
+					li(ui-sref-active="active")
+						a(ui-sref='settings.variables')
+							span.nav-label Variables

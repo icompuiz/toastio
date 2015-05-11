@@ -1,0 +1,55 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		a(ui-sref="types.list({ typeid: null })")
+			h2 Types
+		ol.breadcrumb(ng-if="treeStack")
+			li(ng-repeat="type in treeStack")
+				a(ui-sref="types.list({ typeid: type._id })") {{ type.name }}
+			li.active
+				strong {{ formdata.name }}
+
+.wrapper.wrapper-content.animated.fadeInRight
+	.row
+		.col-lg-12
+			form.form(name="TypeForm", ng-submit="submit()")
+				.ibox.float-e-margins
+					.ibox-title 
+						.btn-toolbar.pull-right
+							a.btn.btn-xs.btn-white(ng-click="cancel()") Cancel
+							button.btn.btn-xs.btn-primary Save Changes
+					.ibox-content
+							.form-group
+								label.control-label Name
+								input.form-control(type="text", placeholder="Type Name", ng-model="formdata.name", required="true")
+
+							.form-group
+								label.control-label Alias
+								input.form-control(type="text", placeholder="Type Alias", ng-model="formdata.alias", required="true")
+
+							.form-group(ng-if="templates")
+								label.control-label Template
+								select.form-control.chosen-select(chosen, tabindex="4", ng-model="formdata.template", ng-options="item._id as item.name for item in templates")
+							
+							.form-group
+									table.table
+										thead
+											th(style="width:10px")
+												a.btn.btn-xs.btn-link(ng-click="addProperty()")
+													span.glyphicon.glyphicon-plus
+											th Name
+											th Format
+										tbody
+											tr(ng-repeat="property in formdata.properties")
+												td
+													a.btn.btn-xs.btn-link(ng-click="removeProperty($index)")
+														span.glyphicon.glyphicon-trash(style="color: red")
+												td 
+													input.form-control(ng-model="property.name", placeholder="Property Name", required="true")
+												td 
+													select.form-control(ng-model="property.format", required="true")
+														option(value="input-text", selected) Text
+														option(value="input-textarea") Text Area
+														option(value="input-richtext") Rich Text
+														//- option(value="input-file") File Upload
+														//- option(value="input-date") Date
+														//- option(value="input-daterange") Date Range

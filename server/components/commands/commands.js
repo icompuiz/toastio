@@ -69,18 +69,14 @@ function commandWhoami(req, res) {
 			}
 			console.log('expressRoutes::who::After finding user resources');
 
-			req.user.populate('mruOrgs', function(err, user) {
-				console.log('expressRoutes::who::After populating mruOrgs');
 
-				user = {
-					_id: user._id,
-					username: user.username,
-					resources: resources,
-					mruOrgs: user.mruOrgs || []
-				};
+			user = {
+				_id: req.user._id,
+				username: req.user.username,
+				resources: resources,
+			};
 
-				res.json(200, user);
-			});
+			res.json(200, user);
 
 		});
 

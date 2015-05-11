@@ -14,6 +14,7 @@ var FileSystemItemSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
+	alias: String,
 	name: {
 		type: String,
 		default: '',

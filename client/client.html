@@ -1,0 +1,116 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" ng-app="toastio">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <base href="/">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(client) app/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css({.tmp,client}) app/app.css -->
+    <link rel="stylesheet" href="app/app.css">
+    <!-- injector:css -->
+    <link rel="stylesheet" href="components/inspina/css/animate.css">
+    <link rel="stylesheet" href="components/inspina/css/style.min.css">
+    <link rel="stylesheet" href="components/inspina/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="components/jquery-ui/jquery-ui.min.css">
+    <!-- endinjector -->
+    <!-- endbuild -->
+</head>
+
+<body ng-controller="MainCtrl as main" class="fullheight">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <div ui-view="" class="fullheight"></div>
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+    <!-- build:js({client,node_modules}) app/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="bower_components/angular-socket-io/socket.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/restangular/dist/restangular.js"></script>
+    <!-- endbower -->
+    <!-- <script src="socket.io-client/socket.io.js"></script> -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,client}) app/app.js -->
+    <script src="app/app.js"></script>
+    <!-- injector:js -->
+    <script src="app/aclstring/aclstring.service.js"></script>
+    <script src="app/authentication/authentication.service.js"></script>
+    <script src="app/blocks/blocks.controller.js"></script>
+    <script src="app/blocks/blocks.js"></script>
+    <script src="app/content/content.controller.js"></script>
+    <script src="app/content/content.js"></script>
+    <script src="app/documents/document-property/document-property-input.directive.js"></script>
+    <script src="app/documents/document-property/input-date/input-date.js"></script>
+    <script src="app/documents/document-property/input-daterange/input-daterange.js"></script>
+    <script src="app/documents/document-property/input-image/input-image.js"></script>
+    <script src="app/documents/document-property/input-richtext/input-richtext.js"></script>
+    <script src="app/documents/document-property/input-text/input-text.js"></script>
+    <script src="app/documents/document-property/input-textarea/input-textarea.js"></script>
+    <script src="app/documents/documents.controller.js"></script>
+    <script src="app/documents/documents.js"></script>
+    <script src="app/login/center-element.directive.js"></script>
+    <script src="app/login/login.controller.js"></script>
+    <script src="app/login/login.js"></script>
+    <script src="app/login/logout-button.directive.js"></script>
+    <script src="app/main/main.controller.js"></script>
+    <script src="app/main/main.js"></script>
+    <script src="app/media/file/file.controller.js"></script>
+    <script src="app/media/file/file.js"></script>
+    <script src="app/media/folder/folder.controller.js"></script>
+    <script src="app/media/folder/folder.js"></script>
+    <script src="app/media/media.controller.js"></script>
+    <script src="app/media/media.js"></script>
+    <script src="app/popup/popup-alert.controller.js"></script>
+    <script src="app/popup/popup-prompt.controller.js"></script>
+    <script src="app/popup/popup.service.js"></script>
+    <script src="app/scripts/scripts.controller.js"></script>
+    <script src="app/scripts/scripts.js"></script>
+    <script src="app/templates/templates.controller.js"></script>
+    <script src="app/templates/templates.js"></script>
+    <script src="app/types/types.controller.js"></script>
+    <script src="app/types/types.js"></script>
+    <script src="app/userSession/userSession.service.js"></script>
+    <script src="components/bootstrap/angular-bootstrap-checkbox.js"></script>
+    <script src="components/bootstrap/bootstrap.js"></script>
+    <script src="components/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="components/inspina/directives.js"></script>
+    <script src="components/inspina/inspinia.js"></script>
+    <script src="components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="components/metisMenu/jquery.metisMenu.js"></script>
+    <script src="components/modal/modal.service.js"></script>
+    <script src="components/navbar/navbar.controller.js"></script>
+    <script src="components/oclazyload/dist/ocLazyLoad.min.js"></script>
+    <script src="components/pace/pace.min.js"></script>
+    <script src="components/slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- endinjector -->
+    <!-- endbuild -->
+</body>
+
+</html>

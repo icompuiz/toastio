@@ -1,0 +1,63 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		a(ui-sref="templates.list({ templateid: null })")
+			h2 Templates
+		ol.breadcrumb(ng-if="formdata._id")
+			li(ng-repeat="template in treeStack")
+				a(ui-sref="templates.list({ templateid: template._id })") {{ template.name }}
+			li.active
+				.dropdown.dropdown-inline(dropdown="")
+					.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+						strong {{ formdata.name }}&nbsp;
+						i.fa.fa-chevron-down
+					ul.dropdown-menu.animated.fadeInRight
+						li
+							a(ui-sref="templates.edit({ templateid: formdata._id })") Edit Template
+							//- a(ng-click="delete(formdata)") Delete Template
+.wrapper.wrapper-content
+	.row
+		.col-lg-3
+			.ibox.float-e-margins
+				.ibox-content
+					button.btn.btn-primary.btn-block(ui-sref="templates.add({ parentid: formdata._id })") Create Template
+					div(ng-if="formdata._id")
+						table.table
+							thead
+								th(colspan="2").small.text-center
+									| Details
+							tbody
+								tr.small
+									td Name:
+									td {{ formdata.name }}
+								tr.small
+									td Created:
+									td {{ formdata.created | date }}
+								tr.small
+									td Last Modified:
+									td {{ formdata.modified | date }}
+								tr.small
+									td # Sub Templates:
+									td {{ formdata.children.length }}
+						button.btn.btn-default.btn-sm.btn-block(ui-sref="templates.edit({ templateid: formdata._id })") Edit Template
+		.col-lg-9.animated.fadeInRight
+			.row
+				.col-lg-12
+					.file-box(ng-repeat="template in formdata.children")
+						.file
+							span.corner
+							.icon
+								a(ui-sref="templates.list({ templateid: template._id })")
+									i.fa.fa-globe
+							.file-name
+								a(ui-sref="templates.list({ templateid: template._id })")
+									| {{ template.name }}
+									br
+								small Added: {{ template.created | date }}
+								.pull-right
+									.dropdown(dropdown="")
+										.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+											i.fa.fa-chevron-down
+										ul.dropdown-menu.animated.fadeInRight
+											li
+												a(ui-sref="templates.edit({ templateid: template._id })") Edit Template
+												a(ng-click="delete(template)") Delete

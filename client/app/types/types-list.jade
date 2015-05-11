@@ -1,0 +1,64 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		a(ui-sref="types.list({ typeid: null })")
+			h2 Types
+		ol.breadcrumb(ng-if="formdata._id")
+			li(ng-repeat="type in treeStack")
+				a(ui-sref="types.list({ typeid: type._id })") {{ type.name }}
+			li.active
+				.dropdown.dropdown-inline(dropdown="")
+					.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+						strong {{ formdata.name }}&nbsp;
+						i.fa.fa-chevron-down
+					ul.dropdown-menu.animated.fadeInRight
+						li
+							a(ui-sref="types.edit({ typeid: formdata._id })") Edit Type
+							a(ng-click="deleteType(formdata)") Delete Type
+							
+.wrapper.wrapper-content
+	.row
+		.col-lg-3
+			.ibox.float-e-margins
+				.ibox-content
+					button.btn.btn-primary.btn-block(ui-sref="types.add({ parentid: formdata._id })") Create Type
+					div(ng-if="formdata._id")
+						table.table
+							thead
+								th(colspan="2").small.text-center
+									| Details
+							tbody
+								tr.small
+									td Name:
+									td {{ formdata.name }}
+								tr.small
+									td Created:
+									td {{ formdata.created | date }}
+								tr.small
+									td Last Modified:
+									td {{ formdata.modified | date }}
+								tr.small
+									td # Sub Types:
+									td {{ formdata.children.length }}
+						button.btn.btn-default.btn-sm.btn-block(ui-sref="types.edit({ typeid: formdata._id })") Edit Type
+		.col-lg-9.animated.fadeInRight
+			.row
+				.col-lg-12
+					.file-box(ng-repeat="type in formdata.children")
+						.file
+							span.corner
+							.icon
+								a(ui-sref="types.list({ typeid: type._id })")
+									i.fa.fa-globe
+							.file-name
+								a(ui-sref="types.list({ typeid: type._id })")
+									| {{ type.name }}
+									br
+								small Added: {{ type.created | date }}
+								.pull-right
+									.dropdown(dropdown="")
+										.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+											i.fa.fa-chevron-down
+										ul.dropdown-menu.animated.fadeInRight
+											li
+												a(ui-sref="types.edit({ typeid: type._id })") Edit Type
+												a(ng-click="delete(type)") Delete

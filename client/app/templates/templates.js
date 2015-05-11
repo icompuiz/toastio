@@ -1,11 +1,38 @@
 'use strict';
 
 angular.module('toastio')
-  .config(function ($stateProvider) {
-    $stateProvider
-      .state('content.templates', {
-        url: '/templates',
-        templateUrl: 'app/templates/templates.html',
-        controller: 'TemplatesCtrl'
-      });
-  });
+    .config(function($stateProvider) {
+        $stateProvider
+            .state('templates', {
+                parent: 'content',
+                url: '/templates',
+                template: '<div ui-view=""></div>',
+                abstract: true
+            })
+            .state('templates.list', {
+                url: '/:templateid',
+                templateUrl: 'app/templates/templates-list.html',
+                controller: 'TemplatesCtrl'
+            })
+            .state('templates.add', {
+                url: '/add/:parentid',
+                templateUrl: 'app/templates/templates-edit.html',
+                controller: 'TemplatesEditCtrl'
+            })
+            .state('templates.edit', {
+                url: '/edit/:templateid',
+                templateUrl: 'app/templates/templates-edit.html',
+                controller: 'TemplatesEditCtrl',
+                resolve: {
+                    loadPlugin: function($ocLazyLoad) {
+                        return $ocLazyLoad.load([{
+                            serie: true,
+                            files: ['lazy_components/codemirror/codemirror.css', 'lazy_components/codemirror/ambiance.css', 'lazy_components/codemirror/codemirror.js', 'lazy_components/codemirror/mode/javascript/javascript.js']
+                        }, {
+                            name: 'ui.codemirror',
+                            files: ['lazy_components/ui-codemirror/ui-codemirror.min.js']
+                        }]);
+                    }
+                }
+            });
+    });

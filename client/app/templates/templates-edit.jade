@@ -1,0 +1,37 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		a(ui-sref="templates.list({ templateid: null })")
+			h2 Templates
+		ol.breadcrumb(ng-if="treeStack")
+			li(ng-repeat="template in treeStack")
+				a(ui-sref="templates.list({ templateid: template._id })") {{ template.name }}
+			li.active
+				strong {{ formdata.name }}
+
+.wrapper.wrapper-content.animated.fadeInRight
+	.row
+		.col-lg-12
+			form.form(name="TemplateForm", ng-submit="submit()")
+				.ibox.float-e-margins
+					.ibox-title 
+						.btn-toolbar.pull-right
+							a.btn.btn-xs.btn-white(ng-click="cancel()") Cancel
+							button.btn.btn-xs.btn-primary Save Changes
+					.ibox-content
+							.form-group
+								label.control-label Name
+								input.form-control(type="text", placeholder="Template Name", ng-model="formdata.name", required="true")
+
+							.form-group
+								label.control-label Alias
+								input.form-control(type="text", placeholder="Template Alias", ng-model="formdata.alias", required="true")
+							
+							.form-group
+								ui-codemirror(ui-codemirror-opts="editorOptions", ng-model="formdata.text")
+							.form-group(ng-non-bindable="")
+								p.text-info.small
+									| Property: {{property name}}
+								p.text-info.small
+									| View Block: {{=viewblock}} ... {{viewblock=}}
+								p.text-info.small
+									| Script: {{~script_name: first=value,second=value2}}

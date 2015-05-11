@@ -1,0 +1,15 @@
+.gray-bg.fullheight
+	.middle-box.text-center.loginscreen.animated.fadeInDown
+			div
+					div
+						img.appsplash.ut-width-100(src="/assets/images/toastycms.png")
+					h3 Welcome to ToastyCMS
+					p Log in to manage your website.
+					form.m-t(role='form', ng-submit="login()")
+						.form-group(ng-class="{'has-error': loginState === 'failed'}")
+							input.form-control(type='email', placeholder='Username', required='', ng-model="user.username")    
+						.form-group(ng-class="{'has-error': loginState === 'failed'}")
+							input.form-control(type='password', placeholder='Password', required='', ng-model="user.password")    
+						button.btn.btn-primary.block.full-width.m-b(ng-disabled="loginState !== 'ready'", ng-class="{'btn-primary': loginState === 'ready', 'btn-success': loginState === 'success', 'btn-info': loginState === 'waiting', 'btn-danger': loginState === 'failed'}") {{ loginBtnText }}
+						a(href='#')
+							small Forgot password?

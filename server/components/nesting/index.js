@@ -497,7 +497,7 @@ var nestableControllerPlugin = function(resource, model, options) {
 
     resource.before('get', function(req, res, next) {
 
-        if (!req.params.id) {
+        if (!req.params.id  && !req.query.pass) {
 
             var conditions = {
                 $or: []

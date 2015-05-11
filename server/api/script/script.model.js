@@ -65,8 +65,8 @@ ScriptSchema.methods.execute = function(content, callback) {
             } else if (block) {
                 var asObject = block.toObject();
 
-                asObject.compile = function() {
-                    block.compile.apply(block, arguments);
+                asObject.compile = function(data) {
+                    return block.compile(data);
                 };
 
                 callback(null, asObject);

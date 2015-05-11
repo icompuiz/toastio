@@ -3,7 +3,7 @@
 var _ = require('lodash'),
     async = require('async');
 
-var DeleteInterceptor = function(resource, Model) {
+var DeleteInterceptor = function(resource) {
 
     resource.before('delete', function(req, res, next) {
         console.log('plugin::deleteInterceptor::before::delete::enter');
@@ -11,7 +11,7 @@ var DeleteInterceptor = function(resource, Model) {
         if (req.params.id) {
 
 
-            Model.findById(req.params.id).exec(function(err, doc) {
+            resource.findById(req.params.id).exec(function(err, doc) {
 
                 if (err) {
                     console.log('plugin::deleteInterceptor::before::delete::findById::err', err);
@@ -19,7 +19,7 @@ var DeleteInterceptor = function(resource, Model) {
                 }
 
                 if (!doc) {
-                    err = new Error('Model not found');
+                    err = new Error('resource not found');
                     console.log('plugin::deleteInterceptor::before::delete::findById::err', err);
                     return res.send(404, err.message || err);
                 }
@@ -44,12 +44,40 @@ var DeleteInterceptor = function(resource, Model) {
 
 };
 
-var PutInterceptor = function(resource, Model) {
+var PutInterceptor = function(resource) {
 
+    resource.after('put', function(req, res, next) {
+
+        if (req.params.id) {
+
+            var executePutCallbacksTask = function(afterExecutePutCallbackTask) {
+                if (_.isFunction(res.locals.bundle.afterPut)) {
+                    res.locals.bundle.afterPut(req, res, afterExecutePutCallbackTask);
+                } else {
+                    afterExecutePutCallbackTask();
+                }
+            };
+
+            var tasks = [executePutCallbacksTask];
+
+            async.series(tasks, function(err) {
+                if (err) {
+                    res.json(500, err);
+                } else {
+                    next();
+                }
+            });
+
+
+        } else {
+            return next();
+        }
+
+    });
     resource.before('put', function(req, res, next) {
 
         if (req.params.id) {
-            var query = Model.findById(req.params.id);
+            var query = resource.findById(req.params.id);
 
             query.exec(function(err, doc) {
 
@@ -59,27 +87,21 @@ var PutInterceptor = function(resource, Model) {
                 }
 
                 if (!doc) {
-                    err = new Error(Model.schema.modelName + ' not found');
+                    err = new Error(resource.schema.modelName + ' not found');
                     return res.send(404, err.message || err);
                 }
-
-                console.log('plugin::putInterceptor::before::put::validating doc object', doc);
-
-                // doc = _.defaults(req.body, doc);
 
                 _.keys(req.body).forEach(function(key) {
                     doc[key] = req.body[key];
                 });
 
-                // console.log('validating object', doc);
-
-                var validateTask = function (afterValidateTask) {
+                var validateTask = function(afterValidateTask) {
                     doc.validate(afterValidateTask);
                 };
 
                 var executePutCallbacksTask = function(afterExecutePutCallbackTask) {
                     if (_.isFunction(doc.onPut)) {
-                        doc.onPut(afterExecutePutCallbackTask);
+                        doc.onPut(req, res, afterExecutePutCallbackTask);
                     } else {
                         afterExecutePutCallbackTask();
                     }

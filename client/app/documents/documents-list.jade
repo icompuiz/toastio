@@ -1,0 +1,67 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		a(ui-sref="documents.list({ documentid: null })")
+			h2
+				|  Documents
+		ol.breadcrumb(ng-if="formdata._id")
+			li(ng-repeat="document in treeStack")
+				a(ui-sref="documents.list({ documentid: document._id })") {{ document.name }}
+			li.active
+				.dropdown.dropdown-inline(dropdown="")
+					.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+						strong {{ formdata.name }}&nbsp;
+						i.fa.fa-chevron-down
+					ul.dropdown-menu.animated.fadeInRight
+						li
+							a(ui-sref="documents.edit({ documentid: formdata._id })") Edit Document
+							a(ng-click="deleteDocument(formdata)") Delete Document
+.wrapper.wrapper-content
+	.row
+		.col-lg-3
+			.ibox.float-e-margins
+				.ibox-content
+					button.btn.btn-primary.btn-block(ui-sref="documents.add({ parentid: formdata._id })") Create Document
+					div(ng-if="formdata._id")
+						table.table
+							thead
+								th(colspan="2").small.text-center
+									| Details
+							tbody
+								tr.small
+									td Name:
+									td {{ formdata.name }}
+								tr.small
+									td Created:
+									td {{ formdata.created | date }}
+								tr.small
+									td Last Modified:
+									td {{ formdata.modified | date }}
+								tr.small
+									td # Sub Documents:
+									td {{ formdata.children.length }}
+								tr.small
+									td(colspan="2").text-center
+										a(ng-href="/{{ path }}", target="_preview({{ formdata._id }})") Preview Document
+						button.btn.btn-default.btn-sm.btn-block(ui-sref="documents.edit({ documentid: formdata._id })") Edit Document
+		.col-lg-9.animated.fadeInRight
+			.row
+				.col-lg-12
+					.file-box(ng-repeat="document in formdata.children")
+						.file
+							span.corner
+							.icon
+								a(ui-sref="documents.list({ documentid: document._id })")
+									i.fa.fa-globe
+							.file-name
+								a(ui-sref="documents.list({ documentid: document._id })")
+									| {{ document.name }}
+									br
+								small Added: {{ document.created | date }}
+								.pull-right
+									.dropdown(dropdown="")
+										.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+											i.fa.fa-chevron-down
+										ul.dropdown-menu.animated.fadeInRight
+											li
+												a(ui-sref="documents.edit({ documentid: document._id })") Edit Document
+												a(ng-click="delete(document)") Delete

@@ -1,0 +1,48 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		a(ui-sref="scripts.list({ scriptid: null })")
+			h2 Scripts
+		ol.breadcrumb(ng-if="treeStack")
+			strong {{ formdata.name }}
+
+.wrapper.wrapper-content.animated.fadeInRight
+	.row
+		.col-lg-12
+			form.form(name="ScriptForm", ng-submit="submit()")
+				.ibox.float-e-margins
+					.ibox-title 
+						.btn-toolbar.pull-right
+							a.btn.btn-xs.btn-white(ng-click="cancel()") Cancel
+							button.btn.btn-xs.btn-primary Save Changes
+					.ibox-content
+							.form-group
+								label.control-label Name
+								input.form-control(type="text", placeholder="Script Name", ng-model="formdata.name", required="true")
+							
+							.form-group
+								ui-codemirror(ui-codemirror-opts="editorOptions", ng-model="formdata.text")
+
+							.form-group
+
+								label Example 1
+								pre
+									| $start();
+									| var output = 'Hello World';
+									| $end(null, output);
+
+								label Example 2
+								pre
+									| $start();
+									| var err = new Error('An error has occured')
+									| $end(err);
+
+								label Example 3
+								pre
+									| $start();
+									| $Blocks('thisisablock', function(err, block) {
+									|   var output = block.compile({
+									|   	specialvalue: 'This is the special value'
+									|   });
+									|   $end(null, output);
+									| });
+

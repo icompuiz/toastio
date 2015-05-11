@@ -1,25 +1,21 @@
+var async = require('async');
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	accessControl = require('../accessControl');
+    Schema = mongoose.Schema,
+    accessControl = require('../accessControl');
 
 var ModelSchema = new Schema({
-	created: {
-		type: Date,
-		default: Date.now
-	},
+    created: {
+        type: Date,
+        default: Date.now
+    },
     system: {
         type: Boolean,
         default: false
     },
-	modified: {
-		type: Date,
-		default: Date.now
-	}
-});
-
-ModelSchema.pre('save', function(done) {
-	this.modified = Date.now();
-	done();
+    modified: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 ModelSchema.pre('remove', function(done) {
@@ -31,6 +27,20 @@ ModelSchema.pre('remove', function(done) {
     }
 
 });
+
+ModelSchema.methods.onPut = function(req, res, onPutCb) {
+
+	var task = function(afterTaskDb) {
+		this.modified = Date.now();
+        console.log('Modified::', this.modified)
+		afterTaskDb();
+	}.bind(req.body);
+
+	var tasks = [task];
+
+	async.auto(tasks, onPutCb);
+
+};
 
 ModelSchema.plugin(accessControl);
 

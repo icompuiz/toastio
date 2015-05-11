@@ -10,7 +10,6 @@ module.exports = {
 	accessControl:  require('./accessControl'),
 	route: require('./route'),
 	commands: require('./commands'),
-	lookupsetup: require('./lookupsetup'),
 	sorting: require('./sorting'),
 	directory: require('./directory'),
 	requestinterceptor: require('./requestinterceptor'),

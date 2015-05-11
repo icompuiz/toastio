@@ -1,0 +1,103 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		a(ui-sref="media")
+			h2 Site Resources
+		ol.breadcrumb(ng-if="formdata.directory")
+			li(ng-if="siteroot")
+				a(ui-sref="media") {{ siteroot.name }}
+			li(ng-repeat="folder in formdata.path")
+				a(ui-sref="media.folder({ folderid: folder._id })") {{ folder.name }}
+			li.active(ng-if="!isSiteRoot")
+				.dropdown.dropdown-inline(dropdown="")
+					.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+						strong {{ formdata.name }}&nbsp;
+						i.fa.fa-chevron-down
+					ul.dropdown-menu.animated.fadeInRight
+						li
+							a(ui-sref="main.folder.edit({ folderid: formdata._id })") Edit Folder
+							a(ng-click="deleteFolder(formdata)") Delete Folder
+.wrapper.wrapper-content
+	.row
+		.col-lg-3
+			.ibox.float-e-margins
+				.ibox-content
+					.dropdown(dropdown="")
+						button.btn.btn-primary.btn-block.dropdown-toggle(dropdown-toggle='') Create
+							| &nbsp;
+							.caret
+						ul.dropdown-menu.animated.fadeInRight
+							li
+								a(ui-sref="main.folder.create({ directory: formdata._id })") Folder 
+							li
+								a(ui-sref="main.file.create({ folderid: formdata._id })") File
+					div(ng-if="formdata._id")
+						table.table
+							thead
+								th(colspan="2").small.text-center
+									| Details
+							tbody
+								tr.small
+									td Name:
+									td {{ formdata.name }}
+								tr.small
+									td Created:
+									td {{ formdata.created | date }}
+								tr.small
+									td Last Modified:
+									td {{ formdata.modified | date }}
+								tr.small
+									td # Items:
+									td {{ formdata.files.length + formdata.folders.length }}
+
+						button.btn.btn-default.btn-sm.btn-block(ng-if="formdata.directory", ui-sref="main.folder.edit({ folderid: formdata._id })") Edit Folder
+
+		.col-lg-9.animated.fadeInRight
+			.row(ng-if="formdata.folders.length")
+				.col-lg-12
+					label Folders
+				.col-lg-12
+					
+					.file-box(ng-repeat="folder in formdata.folders")
+						.file
+							span.corner
+							.file-name
+								//- a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+								i.fa.fa-folder
+								a(ui-sref="media.folder({ folderid: folder._id })", title="Added: {{ folder.created | date }}")
+									|  {{ folder.name }}
+									br
+								small Added: {{ folder.created | date }}
+								.pull-right
+									.dropdown(dropdown="")
+										.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+											i.fa.fa-chevron-down
+										ul.dropdown-menu.animated.fadeInRight
+											li
+												a(ui-sref="main.folder.edit({ folderid: folder._id })") Edit
+												a(ng-click="deleteFolder(folder)") Delete
+			.row(ng-if="formdata.files.length")
+				.col-lg-12
+					label Files
+				.col-lg-12
+					.file-box(ng-repeat="file in formdata.files")
+						.file
+							span.corner
+							.icon(ng-if="!file.isImage")
+								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+									i.fa.fa-file
+							.image(ng-if="file.isImage")
+								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+									img.file-explorer-image-preview.img-responsive(ng-src="/api/files/{{ file._id }}/download?v=small&name={{file.name}}")
+							.file-name
+								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+									| {{ file.name }}
+									br
+								small Added: {{ file.created | date }}
+								.pull-right
+									.dropdown(dropdown="")
+										.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+											i.fa.fa-chevron-down
+										ul.dropdown-menu.animated.fadeInRight
+											li
+												a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}") Download
+												a(ng-click="deleteFile(file)") Delete

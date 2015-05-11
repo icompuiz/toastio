@@ -17,14 +17,14 @@ var BlockSchema = components.model.schema.extend({
     }
 });
 
-BlockSchema.methods.compile = function(data, callback) {
+BlockSchema.methods.compile = function(data) {
 
 	if (this.text) {
 		var template = jade.compile(this.text);
 		var html = template(data);
-		callback(null, html);
+		return html;
 	} else {
-		callback(null,'');
+		return '';
 	}
 
 };

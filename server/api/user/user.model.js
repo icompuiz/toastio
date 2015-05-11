@@ -64,10 +64,6 @@ var UserSchema = new Schema({
 	groups: [{
 		ref: 'Group',
 		type: mongoose.Schema.Types.ObjectId
-	}],
-	mruOrgs: [{
-		ref: 'Org',
-		type: mongoose.Schema.Types.ObjectId
 	}]
 });
 

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * INSPINIA - Responsive Admin Theme
  * Copyright 2015 Webapplayers.com
@@ -50,7 +52,7 @@ function sideNavigation($timeout) {
         restrict: 'A',
         link: function(scope, element) {
             // Call the metsiMenu plugin and plug it to sidebar navigation
-            $timeout(function(){
+            $timeout(function() {
                 element.metisMenu();
 
             });
@@ -64,7 +66,7 @@ function sideNavigation($timeout) {
 function responsiveVideo() {
     return {
         restrict: 'A',
-        link:  function(scope, element) {
+        link: function(scope, element) {
             var figure = element;
             var video = element.children();
             video
@@ -91,23 +93,23 @@ function iboxTools($timeout) {
         restrict: 'A',
         scope: true,
         templateUrl: 'views/common/ibox_tools.html',
-        controller: function ($scope, $element) {
+        controller: function($scope, $element) {
             // Function for collapse ibox
-            $scope.showhide = function () {
-                var ibox = $element.closest('div.ibox');
-                var icon = $element.find('i:first');
-                var content = ibox.find('div.ibox-content');
-                content.slideToggle(200);
-                // Toggle icon from up to down
-                icon.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
-                ibox.toggleClass('').toggleClass('border-bottom');
-                $timeout(function () {
-                    ibox.resize();
-                    ibox.find('[id^=map-]').resize();
-                }, 50);
-            },
+            $scope.showhide = function() {
+                    var ibox = $element.closest('div.ibox');
+                    var icon = $element.find('i:first');
+                    var content = ibox.find('div.ibox-content');
+                    content.slideToggle(200);
+                    // Toggle icon from up to down
+                    icon.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+                    ibox.toggleClass('').toggleClass('border-bottom');
+                    $timeout(function() {
+                        ibox.resize();
+                        ibox.find('[id^=map-]').resize();
+                    }, 50);
+                },
                 // Function for close ibox
-                $scope.closebox = function () {
+                $scope.closebox = function() {
                     var ibox = $element.closest('div.ibox');
                     ibox.remove();
                 }
@@ -117,26 +119,26 @@ function iboxTools($timeout) {
 
 /**
  * minimalizaSidebar - Directive for minimalize sidebar
-*/
+ */
 function minimalizaSidebar($timeout) {
     return {
         restrict: 'A',
         template: '<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="" ng-click="minimalize()"><i class="fa fa-bars"></i></a>',
-        controller: function ($scope, $element) {
-            $scope.minimalize = function () {
+        controller: function($scope, $element) {
+            $scope.minimalize = function() {
                 $("body").toggleClass("mini-navbar");
                 if (!$('body').hasClass('mini-navbar') || $('body').hasClass('body-small')) {
                     // Hide menu in order to smoothly turn on when maximize menu
                     $('#side-menu').hide();
                     // For smoothly turn on menu
                     setTimeout(
-                        function () {
+                        function() {
                             $('#side-menu').fadeIn(500);
                         }, 100);
-                } else if ($('body').hasClass('fixed-sidebar')){
+                } else if ($('body').hasClass('fixed-sidebar')) {
                     $('#side-menu').hide();
                     setTimeout(
-                        function () {
+                        function() {
                             $('#side-menu').fadeIn(500);
                         }, 300);
                 } else {
@@ -153,8 +155,8 @@ function closeOffCanvas() {
     return {
         restrict: 'A',
         template: '<a class="close-canvas-menu" ng-click="closeOffCanvas()"><i class="fa fa-times"></i></a>',
-        controller: function ($scope, $element) {
-            $scope.closeOffCanvas = function () {
+        controller: function($scope, $element) {
+            $scope.closeOffCanvas = function() {
                 $("body").toggleClass("mini-navbar");
             }
         }
@@ -170,7 +172,7 @@ function vectorMap() {
         scope: {
             myMapData: '=',
         },
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
             element.vectorMap({
                 map: 'world_mill_en',
                 backgroundColor: "transparent",
@@ -184,13 +186,11 @@ function vectorMap() {
                     }
                 },
                 series: {
-                    regions: [
-                        {
-                            values: scope.myMapData,
-                            scale: ["#1ab394", "#22d6b1"],
-                            normalizeFunction: 'polynomial'
-                        }
-                    ]
+                    regions: [{
+                        values: scope.myMapData,
+                        scale: ["#1ab394", "#22d6b1"],
+                        normalizeFunction: 'polynomial'
+                    }]
                 },
             });
         }
@@ -208,14 +208,14 @@ function sparkline() {
             sparkData: '=',
             sparkOptions: '=',
         },
-        link: function (scope, element, attrs) {
-            scope.$watch(scope.sparkData, function () {
+        link: function(scope, element, attrs) {
+            scope.$watch(scope.sparkData, function() {
                 render();
             });
-            scope.$watch(scope.sparkOptions, function(){
+            scope.$watch(scope.sparkOptions, function() {
                 render();
             });
-            var render = function () {
+            var render = function() {
                 $(element).sparkline(scope.sparkData, scope.sparkOptions);
             };
         }
@@ -234,7 +234,7 @@ function icheck($timeout) {
                 var value;
                 value = $attrs['value'];
 
-                $scope.$watch($attrs['ngModel'], function(newValue){
+                $scope.$watch($attrs['ngModel'], function(newValue) {
                     $(element).iCheck('update');
                 })
 
@@ -243,17 +243,17 @@ function icheck($timeout) {
                     radioClass: 'iradio_square-green'
 
                 }).on('ifChanged', function(event) {
-                        if ($(element).attr('type') === 'checkbox' && $attrs['ngModel']) {
-                            $scope.$apply(function() {
-                                return ngModel.$setViewValue(event.target.checked);
-                            });
-                        }
-                        if ($(element).attr('type') === 'radio' && $attrs['ngModel']) {
-                            return $scope.$apply(function() {
-                                return ngModel.$setViewValue(value);
-                            });
-                        }
-                    });
+                    if ($(element).attr('type') === 'checkbox' && $attrs['ngModel']) {
+                        $scope.$apply(function() {
+                            return ngModel.$setViewValue(event.target.checked);
+                        });
+                    }
+                    if ($(element).attr('type') === 'radio' && $attrs['ngModel']) {
+                        return $scope.$apply(function() {
+                            return ngModel.$setViewValue(value);
+                        });
+                    }
+                });
             });
         }
     };
@@ -268,7 +268,7 @@ function ionRangeSlider() {
         scope: {
             rangeOptions: '='
         },
-        link: function (scope, elem, attrs) {
+        link: function(scope, elem, attrs) {
             elem.ionRangeSlider(scope.rangeOptions);
         }
     }
@@ -278,27 +278,44 @@ function ionRangeSlider() {
  * dropZone - Directive for Drag and drop zone file upload plugin
  */
 function dropZone() {
-    return function(scope, element, attrs) {
+    function linkfn(scope, element, attrs) {
+        var options = attrs.dropZone;
+        options = scope.$eval(options) || {};
+
         element.dropzone({
-            url: "/upload",
+            url: options.path || '/upload',
             maxFilesize: 100,
-            paramName: "uploadfile",
+            paramName: 'file',
             maxThumbnailFilesize: 5,
             init: function() {
-                scope.files.push({file: 'added'});
-                this.on('success', function(file, json) {
+                this.on('successmultiple', function(file, json) {
+                    scope.$apply(function() {
+                        if (_.isFunction(options.onsuccess)) {
+                            options.onsuccess(file, json);
+                        }
+                    });
                 });
                 this.on('addedfile', function(file) {
-                    scope.$apply(function(){
-                        alert(file);
-                        scope.files.push({file: 'added'});
+                    scope.$apply(function() {
+                        if (_.isFunction(options.onadded)) {
+                            options.onadded(file);
+                        }
                     });
                 });
                 this.on('drop', function(file) {
-                    alert('file');
+                    scope.$apply(function() {
+                        if (_.isFunction(options.ondrop)) {
+                            options.ondrop(file);
+                        }
+                    });
                 });
             }
         });
+    }
+
+    return {
+        restrict: 'A',
+        link: linkfn
     }
 }
 
@@ -309,7 +326,7 @@ function chatSlimScroll($timeout) {
     return {
         restrict: 'A',
         link: function(scope, element) {
-            $timeout(function(){
+            $timeout(function() {
                 element.slimscroll({
                     height: '234px',
                     railOpacity: 0.4
@@ -323,7 +340,7 @@ function chatSlimScroll($timeout) {
 /**
  * customValid - Directive for custom validation example
  */
-function customValid(){
+function customValid() {
     return {
         require: 'ngModel',
         link: function(scope, ele, attrs, c) {
@@ -334,7 +351,7 @@ function customValid(){
 
                 var validText = "Inspinia";
 
-                if(scope.extras == validText) {
+                if (scope.extras == validText) {
                     c.$setValidity('cvalid', true);
                 } else {
                     c.$setValidity('cvalid', false);
@@ -349,11 +366,11 @@ function customValid(){
 /**
  * fullScroll - Directive for slimScroll with 100%
  */
-function fullScroll($timeout){
+function fullScroll($timeout) {
     return {
         restrict: 'A',
         link: function(scope, element) {
-            $timeout(function(){
+            $timeout(function() {
                 element.slimscroll({
                     height: '100%',
                     railOpacity: 0.9

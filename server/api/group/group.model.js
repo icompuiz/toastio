@@ -23,10 +23,6 @@ var GroupSchema = new Schema({
 		default: false
 	},
 	name: { type: String, required: true, validate: nameValidator },
-	org: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Org'
-	},
 	comments: String,
 	members: [{
 		type: mongoose.Schema.Types.ObjectId,

@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
     
 var components = require('../../components');
 
-var TemplateSchema = new Schema({
+var TemplateSchema = components.model.schema.extend({
     name: {
         type: String,
         default: '',

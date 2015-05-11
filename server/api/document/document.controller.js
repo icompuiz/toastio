@@ -5,6 +5,7 @@ exports.attach = function(DocumentResource) {
 
 	components.apiUtils.addPermissionChecks(DocumentResource, DocumentResource);
   components.requestinterceptor.interceptDelete(DocumentResource, DocumentResource);
+  components.requestinterceptor.interceptPut(DocumentResource, DocumentResource);
   components.nesting.nestableController(DocumentResource, DocumentResource);
 
 };

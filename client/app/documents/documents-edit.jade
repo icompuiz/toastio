@@ -1,0 +1,51 @@
+.documents-edit
+	.row.wrapper.border-bottom.white-bg.page-heading
+		.col-lg-9
+			a(ui-sref="documents.list({ documentid: null })")
+				h2
+					|  Documents
+			ol.breadcrumb(ng-if="treeStack")
+				li(ng-repeat="document in treeStack")
+					a(ui-sref="documents.list({ documentid: document._id })") {{ document.name }}
+				li.active
+					strong {{ formdata.name }}
+
+	.wrapper.wrapper-content.animated.fadeInRight
+		.row
+			.col-lg-12
+				form.form(name="FolderForm", ng-submit="submit()")
+					.ibox.float-e-margins
+						.ibox-title 
+							.btn-toolbar.pull-right
+								a.btn.btn-xs.btn-white(ng-click="cancel()") Cancel
+								button.btn.btn-xs.btn-primary Save Changes
+						.ibox-content
+							tabset
+								tab
+									tab-heading
+										i.fa.fa-gear
+									.col-lg-12
+										.form-group
+											label.control-label Name
+											input.form-control(type="text", placeholder="Document Name", ng-model="formdata.name", required="true")
+
+										.form-group
+											label.control-label Alias
+											input.form-control(type="text", placeholder="Document Alias", ng-model="formdata.alias", required="true")
+										
+										.form-group(ng-if="types")
+											label.control-label Type
+											select.form-control.chosen-select(chosen, tabindex="4", ng-model="formdata.type", ng-options="item._id as item.name for item in types")
+												p.text-muted.small Changing this value will clear any property values.
+									.clearfix
+								tab(heading="Properties", ng-if="types && formdata.type")
+									.col-lg-12
+										.form-group(ng-repeat="property in formdata.properties")
+											label(for="{{property.name}}") {{property.name}}
+											a.small.close(ng-click="removeProperty($index)")
+												span.glyphicon.glyphicon-remove(style="color: red")
+											document-property-input(data-document-property="property")
+											.clearfix
+											.hr-line-dashed
+									.clearfix
+
