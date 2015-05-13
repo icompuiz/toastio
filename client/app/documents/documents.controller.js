@@ -41,6 +41,8 @@ angular.module('toastio')
 
         function onTopLevelDocumentsLoaded(topLevelDocuments) {
 
+            $scope.isTopLevel = true;
+
             $scope.formdata.children = topLevelDocuments.plain();
 
         }
@@ -54,7 +56,7 @@ angular.module('toastio')
             onSuccess = onSuccess || angular.noop;
             onError = onError || angular.noop;
             var query = Restangular.one('documents', documentid).get({
-                populate: ['children', 'parent']
+                populate: ['children', 'parent', 'type']
             });
             query.then(onSuccess, onError);
             return query;
@@ -120,7 +122,7 @@ angular.module('toastio')
 
         function loadTypes() {
 
-            Restangular.all('documents').getList({
+            Restangular.all('types').getList({
                 pass: true
             }).then(function(documentTypes) {
 

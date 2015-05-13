@@ -74,6 +74,7 @@ angular.module('toastio')
             matchBrackets: true,
             styleActiveLine: true,
             theme: 'ambiance',
+            indentWithTabs: true,
             mode: 'jade'
         };
 

@@ -44,6 +44,7 @@ nav.navbar-default.navbar-static-side(role='navigation')
 					i.fa.fa-files-o
 					span.nav-label Site Resources
 
+
 			li(ng-class="{active: $state.includes('settings')}")
 				a(ui-sref="settings")
 					i.fa.fa-cogs
@@ -54,3 +55,7 @@ nav.navbar-default.navbar-static-side(role='navigation')
 						a(ui-sref='settings.variables') Variables
 					li(ui-sref-active="active")
 						a(ui-sref='settings.accounts') Accounts
+			li(ng-class="{active: $state.includes('help')}")
+				a(ui-sref='help')
+					i.fa.fa-question
+					span.nav-label Help

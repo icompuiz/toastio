@@ -39,6 +39,10 @@
 								tr.small
 									td # Sub Types:
 									td {{ formdata.children.length }}
+								tr.small
+									td Template:
+									td
+										a(ui-sref="templates.list({ templateid: formdata.template._id })") {{ formdata.template.name }}
 						button.btn.btn-default.btn-sm.btn-block(ui-sref="types.edit({ typeid: formdata._id })") Edit Type
 		.col-lg-9.animated.fadeInRight
 			.row
@@ -48,9 +52,9 @@
 							span.corner
 							.icon
 								a(ui-sref="types.list({ typeid: type._id })")
-									i.fa.fa-globe
+									i.fa.fa-sitemap
 							.file-name
-								a(ui-sref="types.list({ typeid: type._id })")
+								a(ui-sref="types.edit({ typeid: type._id })")
 									| {{ type.name }}
 									br
 								small Added: {{ type.created | date }}

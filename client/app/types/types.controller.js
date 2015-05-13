@@ -38,7 +38,7 @@ angular.module('toastio')
             onSuccess = onSuccess || angular.noop;
             onError = onError || angular.noop;
             var query = Restangular.one('types', typeid).get({
-                populate: ['children', 'parent']
+                populate: ['children', 'parent', 'template']
             });
             query.then(onSuccess, onError);
             return query;

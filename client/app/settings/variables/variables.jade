@@ -1,0 +1,35 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		a
+			h2 Site Variables
+
+.wrapper.wrapper-content.animated.fadeInRight
+	.row
+		.col-lg-12
+			form.form(name="TypeForm", ng-submit="submit()")
+				.ibox.float-e-margins
+					.ibox-title 
+						.btn-toolbar.pull-right
+							a.btn.btn-xs.btn-white(ng-click="cancel()") Cancel
+							button.btn.btn-xs.btn-primary Save Changes
+					.ibox-content
+							.form-group
+									table.table
+										thead
+											th(style="width:10px")
+												a.btn.btn-xs.btn-link(ng-click="addSetting()")
+													span.glyphicon.glyphicon-plus
+											th Name
+											th Value
+										tbody
+											tr(ng-repeat="variable in settings")
+												td
+													a.btn.btn-xs.btn-link(ng-click="delete($index)")
+														span.glyphicon.glyphicon-trash(style="color: red")
+												td 
+													input.form-control(ng-model="variable.name", placeholder="Setting Name", required="true")
+													small.text-muted(ng-if="variable.name")
+														label Alias:
+														span  {{ variable.name | varableAlias }}
+												td 
+													input.form-control(ng-model="variable.value", placeholder="Setting Value", required="true")

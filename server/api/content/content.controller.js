@@ -4,9 +4,10 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     async = require('async'),
     fs = require('fs'),
+    deasync = require('deasync'),
     path = require('path');
 
-    var components = require('../../components');
+var components = require('../../components');
 
 var outputFormatsPath = path.join(__dirname, 'output-formats');
 var regex = {
@@ -276,10 +277,10 @@ function compileTemplate(template) {
 
         };
 
-    } catch(error) {
+    } catch (error) {
 
         return error;
-        
+
     }
 
 }
@@ -348,12 +349,31 @@ function getTemplate(content, req, res) {
                     function findBlocks(stack, accumulator, callback) {
 
                         var currentNode = stack.shift();
-                        
+
                         if (accumulator) {
                             var keys = _.keys(accumulator);
                             keys.forEach(function(key) {
                                 var regex = '{{+' + key + '}}';
-                                currentNode.text = currentNode.text.replace(regex, accumulator[key]);
+
+                                var compilerOrError = compileTemplate(accumulator[key]);
+                                var accumulatorText = '';
+                                var sync = true;
+
+                                if (!_.isFunction(compilerOrError)) {
+                                    accumulatorText = compilerOrError.message;
+                                }
+
+                                compilerOrError(content, function(err, html) {
+                                    sync = false;
+                                    currentNode.text = currentNode.text.replace(regex, html);
+                                });
+
+                                // THIS IS A HACK
+                                // blocking wait until template is compiled into html
+                                while(sync) {
+                                    deasync.runLoopOnce();
+                                }
+                                
                             });
                         } else {
                             accumulator = {};
@@ -382,13 +402,14 @@ function getTemplate(content, req, res) {
                     if (stack && stack.length) {
 
                         findBlocks(stack, null, function(err, text) {
-                            var compiler = compileTemplate(text);
+                            var compilerOrError = compileTemplate(text);
 
-                            if (!_.isFunction(compiler)) {
-                                return components.errors[404](req, res);
+                            if (!_.isFunction(compilerOrError)) {
+                                console.error(compilerOrError);
+                                return components.errors[400](req, res, JSON.stringify(compilerOrError.message));
                             }
 
-                            compiler(content, function(err, html) {
+                            compilerOrError(content, function(err, html) {
                                 res.send(200, html);
                             });
                         });
@@ -421,6 +442,8 @@ function getTemplateById(req, res) {
 
     contentQuery.exec(function(err, content) {
 
+
+
         if (err || !content) {
 
             return components.errors[404](req, res);
@@ -440,11 +463,12 @@ function getTemplateByPath(req, res) {
 
     var Document = mongoose.model('Document');
 
-    Document.findByPath(contentPath, function(err, contentId) {
+    Document.findByPath(contentPath, function(err, content) {
         if (err) {
             return components.errors[404](req, res);
         } else {
-            req.params.contentId = contentId;
+
+            req.params.contentId = content;
             getTemplateById(req, res);
         }
 

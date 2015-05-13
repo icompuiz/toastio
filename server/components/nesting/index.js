@@ -327,6 +327,7 @@ var NestableModelPlugin = function(schema, modelName, options) {
 
         function getNextNode(conditions, getNextNodeTaskDone) {
 
+            
             if (!conditions.alias) {
                 getNextNodeTaskDone(null, currentNode);
             } else {
@@ -353,6 +354,7 @@ var NestableModelPlugin = function(schema, modelName, options) {
             if (err) {
                 findByPathTaskDone(err);
             } else {
+                
                 findByPathTaskDone(null, finalNode);
             }
         });

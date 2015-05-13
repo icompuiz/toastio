@@ -47,9 +47,9 @@
 							span.corner
 							.icon
 								a(ui-sref="templates.list({ templateid: template._id })")
-									i.fa.fa-globe
+									i.fa.fa-sitemap
 							.file-name
-								a(ui-sref="templates.list({ templateid: template._id })")
+								a(ui-sref="templates.edit({ templateid: template._id })")
 									| {{ template.name }}
 									br
 								small Added: {{ template.created | date }}

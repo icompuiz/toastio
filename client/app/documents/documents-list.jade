@@ -37,8 +37,12 @@
 									td Last Modified:
 									td {{ formdata.modified | date }}
 								tr.small
-									td # Sub Documents:
+									td Sub Documents:
 									td {{ formdata.children.length }}
+								tr.small
+									td Type:
+									td 
+										a(ui-sref="types.list({ typeid: formdata.type._id })") {{ formdata.type.name }}
 								tr.small
 									td(colspan="2").text-center
 										a(ng-href="/{{ path }}", target="_preview({{ formdata._id }})") Preview Document
@@ -51,11 +55,11 @@
 							span.corner
 							.icon
 								a(ui-sref="documents.list({ documentid: document._id })")
-									i.fa.fa-globe
+									i.fa.fa-sitemap
 							.file-name
-								a(ui-sref="documents.list({ documentid: document._id })")
+								a(ui-sref="documents.edit({ documentid: document._id })")
 									| {{ document.name }}
-									br
+								br
 								small Added: {{ document.created | date }}
 								.pull-right
 									.dropdown(dropdown="")
