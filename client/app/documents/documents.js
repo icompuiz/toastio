@@ -31,6 +31,8 @@ angular.module('toastio')
                         }, {
                             name: 'summernote',
                             files: ['lazy_components/summernote/summernote.css', 'lazy_components/summernote/summernote-bs3.css', 'lazy_components/summernote/summernote.min.js', 'lazy_components/summernote/angular-summernote.min.js']
+                        },{
+                            files: ['lazy_components/iCheck/css/custom.css','lazy_components/iCheck/icheck.min.js']
                         }]);
                     }
                 }

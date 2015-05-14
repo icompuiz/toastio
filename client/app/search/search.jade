@@ -1,0 +1,127 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		h2 Search Results
+.wrapper.wrapper-content
+	.row
+		.col-lg-12.animated.fadeInRight(ng-if="results.Documents.length")
+			.row
+				.col-lg-12
+					label Documents
+				.col-lg-12
+					.file-box(ng-repeat="document in results.Documents")
+						.file
+							span.corner
+							.icon
+								a(ui-sref="documents.list({ documentid: document._id })")
+									i.fa.fa-sitemap
+							.file-name
+								a(ui-sref="documents.edit({ documentid: document._id })")
+									| {{ document.name }}
+								br
+								small Added: {{ document.created | date }}
+
+		.col-lg-12.animated.fadeInRight(ng-if="results.Templates.length")
+			.row
+				.col-lg-12
+					label Templates
+				.col-lg-12
+					.file-box(ng-repeat="template in results.Templates")
+						.file
+							span.corner
+							.icon
+								a(ui-sref="templates.list({ templateid: template._id })")
+									i.fa.fa-sitemap
+							.file-name
+								a(ui-sref="templates.edit({ templateid: template._id })")
+									| {{ template.name }}
+									br
+								small Added: {{ template.created | date }}
+
+		.col-lg-12.animated.fadeInRight(ng-if="results.Types.length")
+			.row
+				.col-lg-12
+					label Types
+				.col-lg-12
+					.file-box(ng-repeat="type in results.Types")
+						.file
+							span.corner
+							.icon
+								a(ui-sref="types.list({ typeid: type._id })")
+									i.fa.fa-sitemap
+							.file-name
+								a(ui-sref="types.edit({ typeid: type._id })")
+									| {{ type.name }}
+									br
+								small Added: {{ type.created | date }}
+
+		.col-lg-12.animated.fadeInRight(ng-if="results.Scripts.length")
+			.row
+				.col-lg-12.animated.fadeInRight
+					.row
+						.col-lg-12
+							label Scripts
+						.col-lg-12
+							.file-box(ng-repeat="script in results.Scripts")
+								.file
+									span.corner
+									.icon
+										a(ui-sref="scripts.edit({ scriptid: script._id })")
+											i.fa.fa-code
+									.file-name
+										a(ui-sref="scripts.edit({ scriptid: script._id })")
+											| {{ script.name }}
+											br
+										small Added: {{ script.created | date }}
+
+		.col-lg-12.animated.fadeInRight(ng-if="results.Blocks.length")
+			.row
+				.col-lg-12
+					label Blocks
+				.col-lg-12
+					.file-box(ng-repeat="block in results.Blocks")
+						.file
+							span.corner
+							.icon
+								a(ui-sref="blocks.edit({ blockid: block._id })")
+									i.fa.fa-code
+							.file-name
+								a(ui-sref="blocks.edit({ blockid: block._id })")
+									| {{ block.name }}
+									br
+								small Added: {{ block.created | date }}
+
+		.col-lg-12.animated.fadeInRight(ng-if="results.FileSystem.directories.length")
+			.row
+				.col-lg-12
+					label Folders
+				.col-lg-12
+					
+					.file-box(ng-repeat="folder in results.FileSystem.directories")
+						.file
+							span.corner
+							.file-name
+								//- a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+								i.fa.fa-folder
+								a(ui-sref="media.folder({ folderid: folder._id })", title="Added: {{ folder.created | date }}")
+									|  {{ folder.name }}
+									br
+								small Added: {{ folder.created | date }}
+		.col-lg-12.animated.fadeInRight
+			.row(ng-if="results.FileSystem.files.length")
+				.col-lg-12
+					label Files
+				.col-lg-12
+					.file-box(ng-repeat="file in results.FileSystem.files")
+						.file
+							span.corner
+							.icon(ng-if="!file.isImage")
+								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+									i.fa.fa-file
+							.image(ng-if="file.isImage")
+								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+									img.file-explorer-image-preview.img-responsive(ng-src="/api/files/{{ file._id }}/download?v=small&name={{file.name}}")
+							.file-name
+								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+									| {{ file.name }}
+									br
+								small Added: {{ file.created | date }}

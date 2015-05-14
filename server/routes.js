@@ -86,6 +86,7 @@ module.exports = function(app) {
   addRestfulEndpoint(require('./api/group'), '/api/groups');
   addRestfulEndpoint(require('./api/user'), '/api/users');
   
+  addEndpoint(require('./api/search'));
   addEndpoint(require('./api/authentication'));
 
   // All undefined asset or api routes should return a 404

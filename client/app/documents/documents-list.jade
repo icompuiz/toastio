@@ -58,6 +58,7 @@
 									i.fa.fa-sitemap
 							.file-name
 								a(ui-sref="documents.edit({ documentid: document._id })")
+									i.fa.fa-home(ng-if="document.isHomePage") &nbsp;
 									| {{ document.name }}
 								br
 								small Added: {{ document.created | date }}

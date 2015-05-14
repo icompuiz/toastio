@@ -18,6 +18,7 @@ var DocumentSchema = components.model.schema.extend({
         ref: 'Type',
         type: mongoose.Schema.Types.ObjectId
     },
+    isHomePage: Boolean,
     properties: [DocumentProperty.schema]
 });
 

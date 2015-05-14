@@ -1,226 +1,322 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-	_ = require('lodash'),
-	async = require('async');
-	
+    _ = require('lodash'),
+    async = require('async');
+
 var components = require('../../components');
 var apiUtils = components.apiUtils;
+
+function searchFileSystem(query, searchFileSystemCb) {
+
+    var directorySearchConfig = {
+        conditions: {
+            $and: [{
+                _class: 'FileSystemDirectory'
+            }]
+        }
+    };
+    var fileSearchConfig = {
+        conditions: {
+            $and: [{
+                _class: {
+                    $ne: 'FileSystemDirectory'
+                }
+            }]
+        }
+    };
+
+    var hasFileParams = false;
+    var hasDirParams = false;
+
+    if (query.sort) {
+        directorySearchConfig.sort = query.sort;
+        fileSearchConfig.sort = query.sort;
+    }
+
+    if (query.fileSort) {
+        fileSearchConfig.sort = query.fileSort;
+    }
+
+    if (query.directorySort) {
+        directorySearchConfig.sort = query.directorySort;
+    }
+
+    if (query.limit) {
+        directorySearchConfig.limit = query.limit;
+        fileSearchConfig.limit = query.limit;
+    }
+
+    if (query.fileLimit) {
+        fileSearchConfig.limit = query.fileLimit;
+    }
+
+    if (query.directoryLimit) {
+        directorySearchConfig.limit = query.directoryLimit;
+    }
+
+
+    if (query.id) {
+        hasDirParams = true;
+        hasFileParams = true;
+        // directorySearchConfig.conditions._id = query.id;
+        // fileSearchConfig.conditions._id = query.id;
+        var idCond = {
+            _id: query.id
+        };
+
+        directorySearchConfig.conditions.$and.push(idCond);
+        fileSearchConfig.conditions.$and.push(idCond);
+
+    }
+
+    if (query.name) {
+        hasDirParams = true;
+        hasFileParams = true;
+
+        var nameCond = {
+            name: {
+                $regex: '.*' + query.name + '.*',
+                $options: 'i'
+            }
+        };
+
+        directorySearchConfig.conditions.$and.push(nameCond);
+        fileSearchConfig.conditions.$and.push(nameCond);
+
+    }
+
+    if (query.directoryId) {
+        hasDirParams = true;
+
+        var idCond = {
+            _id: query.directoryId
+        };
+
+        directorySearchConfig.conditions.$and.push(idCond);
+    }
+
+    if (query.directoryName) {
+        hasDirParams = true;
+
+
+        var nameCond = {
+            name: {
+                $regex: '.*' + query.directoryName + '.*',
+                $options: 'i'
+            }
+        };
+
+        directorySearchConfig.conditions.$and.push(nameCond);
+    }
+
+    if (query.fileName) {
+        hasFileParams = true;
+        var nameCond = {
+            name: {
+                $regex: '.*' + query.fileName + '.*',
+                $options: 'i'
+            }
+        };
+
+        fileSearchConfig.conditions.$and.push(nameCond);
+    }
+
+
+    if (query.fileId) {
+        hasFileParams = true;
+
+        var idCond = {
+            _id: query.fileId
+        };
+
+        fileSearchConfig.conditions.$and.push(idCond);
+    }
+
+    if (query.fileType) {
+        hasFileParams = true;
+
+        var typeCond = {
+            type: {
+                $regex: '.*' + query.fileType + '.*',
+                $options: 'i'
+            }
+        };
+
+        fileSearchConfig.conditions.$and.push(typeCond);
+        directorySearchConfig.conditions.$and.push(typeCond);
+
+    }
+
+    if (query.fileDirectory) {
+        hasFileParams = true;
+
+        var fileDirDCond = {
+            directory: query.fileDirectory
+        };
+
+        fileSearchConfig.conditions.$and.push(fileDirDCond);
+        directorySearchConfig.conditions.$and.push(fileDirDCond);
+    }
+
+    if (!(hasFileParams || hasDirParams)) {
+        var err = new Error('Please specify some valid query parameters');
+        return searchFileSystemCb(err);
+    }
+
+    console.log(JSON.stringify(fileSearchConfig, null, ' '));
+
+    function searchFiles(searchFilesDoneCB) {
+
+        if (!hasFileParams) {
+            return searchFilesDoneCB();
+        }
+        var File = mongoose.model('FileSystemFile');
+        var fileQuery = File.find(fileSearchConfig.conditions);
+
+
+
+        if (fileSearchConfig.sort) {
+            fileQuery.sort(fileSearchConfig.sort);
+        }
+
+        if (fileSearchConfig.limit) {
+            fileQuery.limit(fileSearchConfig.limit);
+        }
+
+
+        fileQuery.exec(function(err, files) {
+
+            if (err) {
+                return searchFilesDoneCB(err);
+            }
+
+            async.filter(files, function(fileDoc, filterFileCb) {
+                fileDoc.isAllowed('read', function(err, isAllowed) {
+                    if (err) {
+                        return filterFileCb(false);
+                    }
+
+                    filterFileCb(isAllowed);
+                });
+            }, function(files) {
+                searchFilesDoneCB(null, files);
+            });
+
+        });
+    }
+
+    function searchDirectories(searchDirectoriesDoneCB) {
+
+        if (!hasDirParams) {
+            return searchDirectoriesDoneCB();
+        }
+        var Directory = mongoose.model('FileSystemDirectory');
+        var dirQuery = Directory.find(directorySearchConfig.conditions);
+
+        if (directorySearchConfig.sort) {
+            dirQuery.sort(directorySearchConfig.sort);
+        }
+
+        if (directorySearchConfig.limit) {
+            dirQuery.limit(directorySearchConfig.limit);
+        }
+
+        dirQuery.exec(function(err, directories) {
+
+            if (err) {
+                return searchDirectoriesDoneCB(err);
+            }
+
+            async.filter(directories, function(directoryDoc, filterDirectoryCb) {
+                directoryDoc.isAllowed('read', function(err, isAllowed) {
+                    if (err) {
+                        return filterDirectoryCb(false);
+                    }
+
+                    filterDirectoryCb(isAllowed);
+                });
+            }, function(directories) {
+                searchDirectoriesDoneCB(null, directories);
+            });
+
+
+        });
+    }
+
+    async.parallel({
+        files: searchFiles,
+        directories: searchDirectories
+    }, function(err, results) {
+
+        if (err) {
+            return searchFileSystemCb(err);
+        }
+
+        results = results || {
+            files: [],
+            directories: []
+        };
+        var searchResults = {
+            name: 'Search Results',
+            directories: results.directories,
+            files: results.files
+        };
+
+        searchFileSystemCb(null, searchResults);
+
+    });
+
+}
+
+exports.search = searchFileSystem;
 exports.attach = function(FilesystemResource) {
 
 
-	var FileSystemItem = require('./filesystem.item.model');
 
-	apiUtils.addPermissionChecks(FilesystemResource, FileSystemItem);
+    var FileSystemItem = require('./filesystem.item.model');
 
-	FilesystemResource.before('get', function(req, res, next) {
+    apiUtils.addPermissionChecks(FilesystemResource, FileSystemItem);
 
-		if (!req.params.id) {
-			req.quer.where({
-				'directory': null
-			});
-		}
+    FilesystemResource.before('get', function(req, res, next) {
 
-		req.quer.where({
-			_class: 'FileSystemDirectory'
-		});
+        if (!req.params.id) {
+            req.quer.where({
+                'directory': null
+            });
+        }
 
-		// req.quer.limit(1);
+        req.quer.where({
+            _class: 'FileSystemDirectory'
+        });
 
-		next();
+        next();
 
-	});
+    });
 
-	FilesystemResource.after('get', function(req, res, next) {
+    FilesystemResource.after('get', function(req, res, next) {
 
-		if (!req.params.id) {
-			res.locals.bundle = _.first(res.locals.bundle);
-		}
+        if (!req.params.id) {
+            res.locals.bundle = _.first(res.locals.bundle);
+        }
 
-		next();
+        next();
 
-	});
+    });
 
-	FilesystemResource.route('search.get', function(req, res) {
+    FilesystemResource.route('search.get', function(req, res) {
 
-		var File = mongoose.model('File');
-		var Directory = mongoose.model('Directory');
+        searchFileSystem(req.query, function(err, searchResults) {
+            if (err) {
+                return res.jsonp(500, {
+                    'error': err.message || err
+                });
+            }
 
-		var query = req.query;
+            res.json(200, searchResults);
+        });
 
-		var directorySearchConfig = {
-			conditions: {}
-		};
-		var fileSearchConfig = {
-			conditions: {}
-		};
+    });
 
-		var hasFileParams = false;
-		var hasDirParams = false;
-
-		if (query.sort) {
-			directorySearchConfig.sort = query.sort;
-			fileSearchConfig.sort = query.sort;
-		}
-
-		if (query.fileSort) {
-			fileSearchConfig.sort = query.fileSort;
-		}
-
-		if (query.directorySort) {
-			directorySearchConfig.sort = query.directorySort;
-		}
-
-		if (query.limit) {
-			directorySearchConfig.limit = query.limit;
-			fileSearchConfig.limit = query.limit;
-		}
-
-		if (query.fileLimit) {
-			fileSearchConfig.limit = query.fileLimit;
-		}
-
-		if (query.directoryLimit) {
-			directorySearchConfig.limit = query.directoryLimit;
-		}
-
-
-		if (query.id) {
-			hasDirParams = true;
-			hasFileParams = true;
-			directorySearchConfig.conditions._id = query.id;
-			fileSearchConfig.conditions._id = query.id;
-		}
-
-		if (query.name) {
-			hasDirParams = true;
-			hasFileParams = true;
-			directorySearchConfig.conditions.name = {
-				$regex: '.*' + query.name + '.*',
-				$options: 'i'
-			};
-			fileSearchConfig.conditions.name = {
-				$regex: '.*' + query.name + '.*',
-				$options: 'i'
-			};
-		}
-
-		if (query.directoryId) {
-			hasDirParams = true;
-			directorySearchConfig.conditions._id = query.directoryId;
-		}
-
-		if (query.directoryName) {
-			hasDirParams = true;
-			directorySearchConfig.conditions.name = {
-				$regex: '.*' + query.directoryName + '.*',
-				$options: 'i'
-			};
-		}
-
-		if (query.fileName) {
-			hasFileParams = true;
-			fileSearchConfig.conditions.name = {
-				$regex: '.*' + query.fileName + '.*',
-				$options: 'i'
-			};
-		}
-
-
-		if (query.fileId) {
-			hasFileParams = true;
-			fileSearchConfig.conditions._id = query.fileId;
-		}
-
-		if (query.fileType) {
-			hasFileParams = true;
-			fileSearchConfig.conditions.type = {
-				$regex: '.*' + query.fileType + '.*',
-				$options: 'i'
-			};
-		}
-
-		if (query.fileDirectory) {
-			hasFileParams = true;
-			fileSearchConfig.conditions.directory = query.fileDirectory;
-		}
-
-		if (!(hasFileParams || hasDirParams)) {
-			var err = new Error('Please specify some valid query parameters');
-			return res.jsonp(500, {
-				'error': err.message || err
-			});
-		}
-
-		function searchFiles(searchFilesDoneCB) {
-
-			if (!hasFileParams) {
-				return searchFilesDoneCB();
-			}
-
-			var fileQuery = File.find(fileSearchConfig.conditions);
-
-			if (fileSearchConfig.sort) {
-				fileQuery.sort(fileSearchConfig.sort);
-			}
-
-			if (fileSearchConfig.limit) {
-				fileQuery.limit(fileSearchConfig.limit);
-			}
-
-
-			fileQuery.exec(function(err, files) {
-
-				searchFilesDoneCB(err, files);
-
-			});
-		}
-
-		function searchDirectories(searchDirectoriesDoneCB) {
-
-			if (!hasDirParams) {
-				return searchDirectoriesDoneCB();
-			}
-
-			var dirQuery = Directory.find(directorySearchConfig.conditions);
-
-			if (directorySearchConfig.sort) {
-				dirQuery.sort(directorySearchConfig.sort);
-			}
-
-			if (directorySearchConfig.limit) {
-				dirQuery.limit(directorySearchConfig.limit);
-			}
-
-			dirQuery.exec(function(err, directories) {
-
-				searchDirectoriesDoneCB(err, directories);
-
-			});
-		}
-
-		async.series({
-			files: searchFiles,
-			directories: searchDirectories
-		}, function(err, results) {
-
-			if (err) {
-				return res.json(500, err.message || err);
-			}
-
-			results = results || {
-				files: [],
-				directories: []
-			};
-			var searchData = {
-				name: 'Search Results',
-				directories: results.directories,
-				files: results.files
-			};
-
-			res.json(200, searchData);
-
-		});
-	});
 
 };

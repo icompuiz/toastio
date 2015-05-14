@@ -3,9 +3,9 @@
 		.navbar-header
 			span(minimaliza-sidebar='')
 			| &#x9;&#x9;&#x9;
-			form.navbar-form-custom(role='search', method='post', action='')
+			form.navbar-form-custom(role='search', ng-submit="search.execute()", ng-controller="SearchBarCtrl as search")
 				.form-group
-					input#top-search.form-control(type='text', placeholder='Search for something...', name='top-search')
+					input#top-search.form-control(type='text', placeholder='Search for something...', name='top-search', ng-model="search.query")
 		| &#x9;&#x9;
 		ul.nav.navbar-top-links.navbar-right
 			li

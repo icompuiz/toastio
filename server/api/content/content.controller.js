@@ -365,30 +365,30 @@ function getTemplate(content, req, res) {
 
                                 compilerOrError(content, function(err, html) {
                                     sync = false;
-                                    currentNode.text = currentNode.text.replace(regex, html);
+                                    currentNode.text = currentNode.text.replace(regex, html) || '';
                                 });
 
                                 // THIS IS A HACK
                                 // blocking wait until template is compiled into html
-                                while(sync) {
+                                while (sync) {
                                     deasync.runLoopOnce();
                                 }
-                                
+
                             });
                         } else {
                             accumulator = {};
                         }
 
                         if (currentNode.parent) {
+                            var matches = currentNode.text.match(regex.global) || [];
 
-                            currentNode.text.match(regex.global)
-                                .map(function(match) {
+                            matches.map(function(match) {
 
-                                    var block = processMatch(match);
-                                    return block;
-                                }).forEach(function(block) {
-                                    accumulator[block.placeholder] = block.block;
-                                });
+                                var block = processMatch(match);
+                                return block;
+                            }).forEach(function(block) {
+                                accumulator[block.placeholder] = block.block;
+                            });
 
                             findBlocks(stack, accumulator, callback);
 
@@ -460,10 +460,9 @@ function getTemplateByPath(req, res) {
 
     var contentPath = req.url;
 
-
     var Document = mongoose.model('Document');
 
-    Document.findByPath(contentPath, function(err, content) {
+    function getTemplate(err, content) {
         if (err) {
             return components.errors[404](req, res);
         } else {
@@ -471,8 +470,16 @@ function getTemplateByPath(req, res) {
             req.params.contentId = content;
             getTemplateById(req, res);
         }
+    }
 
-    });
+    if (contentPath === '/') {
+        Document.findOne({
+            isHomePage: true
+        }).exec(getTemplate);
+    } else {
+        Document.findByPath(contentPath, getTemplate);
+    }
+
 
 }
 

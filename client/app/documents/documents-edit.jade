@@ -32,6 +32,10 @@
 										.form-group
 											label.control-label Alias
 											input.form-control(type="text", placeholder="Document Alias", ng-model="formdata.alias", required="true")
+										.form-group
+											label
+												input(icheck, type="checkbox", ng-model="formdata.isHomePage") 
+												|  Home Page
 										
 										.form-group(ng-if="types")
 											label.control-label Type
