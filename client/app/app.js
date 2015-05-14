@@ -9,6 +9,7 @@ angular.module('toastio', [
 				'ui.bootstrap',
 				'oc.lazyLoad',
 				'restangular',
+				'ngCkeditor',
 				'inspinia'
 		])
 		.config(function($stateProvider, $urlRouterProvider, $locationProvider, RestangularProvider, $ocLazyLoadProvider) {
