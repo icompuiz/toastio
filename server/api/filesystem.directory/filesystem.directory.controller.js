@@ -93,6 +93,9 @@ exports.attach = function(FileSystemDirectoryResource) {
 					return next(err);
 				}
 
+        res.locals.bundle = res.locals.bundle.toObject();
+				
+
 				res.locals.bundle.path = parents.reverse();
 				// res.jsonp(200, res.locals.bundle);
 				next();

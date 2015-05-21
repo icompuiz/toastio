@@ -88,6 +88,7 @@ module.exports = function(app) {
   
   addEndpoint(require('./api/search'));
   addEndpoint(require('./api/authentication'));
+  addEndpoint(require('./api/filesystem'));
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')

@@ -22,6 +22,8 @@ angular.module('toastio')
 
             if ($scope.formdata.path && $scope.formdata.path.length) {
                 $scope.siteroot = $scope.formdata.path.shift();
+                $scope.path = _.pluck($scope.formdata.path, 'name').concat([$scope.formdata.name]).join('/').replace(/^\//, '');
+                console.log($scope.path);
             } else {
                 $scope.siteroot = $scope.formdata;
                 $scope.isSiteRoot = true;

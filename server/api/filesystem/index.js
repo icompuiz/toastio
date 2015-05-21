@@ -22,9 +22,23 @@ var FilesystemResource = restful
                 .methods(['get','put','delete','post']);         
 
 FilesystemController.attach(FilesystemResource);
+var routes = [{
+	path: '/tcms/*',
+	method: 'GET',
+	middleware: FilesystemController.getFileByPath
+},{
+	path: '/tio/*',
+	method: 'GET',
+	middleware: FilesystemController.getFileByPath
+},{
+	path: '/tmedia/*',
+	method: 'GET',
+	middleware: FilesystemController.getFileByPath
+}];
 
 module.exports = {
 	resource:  FilesystemResource,
 	controller: FilesystemController,
-	model: FilesystemItem
+	model: FilesystemItem,
+	routes: routes
 };

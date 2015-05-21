@@ -269,7 +269,37 @@ function searchFileSystem(query, searchFileSystemCb) {
 
 }
 
+function getFileByPath(req, res) {
+
+    var filePath = req.url.replace(/^\/(tcms|tmedia|tio)/, '');
+
+    console.log('Get File By Path', filePath);
+
+    var FileSystemFileModel = mongoose.model('FileSystemFile');
+    var FileSystemFileCtrl = require('../filesystem.file/filesystem.file.controller.js')
+
+    function getFile(err, fileDoc) {
+        if (err) {
+            return components.errors[404](req, res);
+        }
+
+        if (!fileDoc) {
+            return components.errors[404](req, res);
+        }
+
+        req.params.id = fileDoc._id;
+        FileSystemFileCtrl.downloadFile(req, res);
+        
+    }
+
+   
+    FileSystemFileModel.findByPath(filePath, getFile);
+
+
+}
+
 exports.search = searchFileSystem;
+exports.getFileByPath = getFileByPath;
 exports.attach = function(FilesystemResource) {
 
 

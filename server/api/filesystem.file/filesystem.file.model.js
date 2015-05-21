@@ -30,6 +30,7 @@ var FileSystemFileSchema = FileSystemItem.schema.extend({
 
 var copyFile = function(file, doneCopyingFile, removeFile) {
     console.log('REMOVE FILE', removeFile);
+
     function onFileExists(err, exists) {
         if (exists) {
 
@@ -73,9 +74,9 @@ var copyFile = function(file, doneCopyingFile, removeFile) {
         fs.exists(file.path, function(exists) {
             fileExistsAsIsDone(null, exists);
         });
-        
-    } 
-    
+
+    }
+
     function fileExistsUpperCase(exists, fileExistsUpperCaseDone) {
 
         if (exists) {
@@ -85,14 +86,14 @@ var copyFile = function(file, doneCopyingFile, removeFile) {
             var filePath = file.path.replace(path.extname(file.path), ext);
 
             fs.exists(filePath, function(exists) {
-                if ( exists) {
+                if (exists) {
                     file.path = filePath;
                 }
                 fileExistsUpperCaseDone(null, exists);
             });
         }
 
-    }  
+    }
 
     function fileExistsLowerCase(exists, fileExistsLowerCaseDone) {
 
@@ -103,7 +104,7 @@ var copyFile = function(file, doneCopyingFile, removeFile) {
             var filePath = file.path.replace(path.extname(file.path), ext);
 
             fs.exists(filePath, function(exists) {
-                if ( exists) {
+                if (exists) {
                     file.path = filePath;
                 }
                 fileExistsLowerCaseDone(null, exists);
@@ -130,13 +131,13 @@ var copyStream = function(stream, type) {
 
     fileName(function(token) {
 
-            console.log('model::file::copyStream::got name', token);
+        console.log('model::file::copyStream::got name', token);
 
         var fullname = path.join(os.tmpdir(), token);
 
         fullname = path.resolve(fullname);
-            console.log('model::file::copyStream::fullname', fullname);
-            
+        console.log('model::file::copyStream::fullname', fullname);
+
 
         var writeStream = fs.createWriteStream(fullname);
 
@@ -148,12 +149,12 @@ var copyStream = function(stream, type) {
 
         stream.on('end', function() {
 
-                    console.log('model::file::copyStream::stream.pipe::success');
+            console.log('model::file::copyStream::stream.pipe::success');
 
             copyFile(fileData, function(err, gridStore) {
-                
+
                 fs.unlink(fullname, function() {
-                                    console.log('model::file::copyStream::stream.pipe::success', 'Deleting tmp file', fullname);
+                    console.log('model::file::copyStream::stream.pipe::success', 'Deleting tmp file', fullname);
 
                     streamPromise.resolve(gridStore);
 
@@ -347,7 +348,7 @@ function getBuffer(callback, version) {
     var fileId = file[version];
 
     if (!fileId) {
-            
+
         if (_.isFunction(file.handleVersionNotFound)) {
             file.handleVersionNotFound(version, function() {
                 FileSystemFile.findById(file._id).exec(function(err, updatedFile) {
@@ -386,4 +387,68 @@ FileSystemFileSchema.methods.convert = function(format, done) {
     done();
 };
 
-module.exports =  mongoose.model('FileSystemFile', FileSystemFileSchema);
+FileSystemFileSchema.statics.findByPath = function(path, findByPathTaskDone) {
+
+    var FileSystemFile = this;
+    var FileSystemDirectory = mongoose.model('FileSystemDirectory');
+
+    path = decodeURIComponent(path.replace(/^\//, ''));
+    var nameStack = path.split('/').reverse();
+
+    var currentNode = null;
+
+    function getNextNode(conditions, getNextNodeTaskDone) {
+
+
+        if (!conditions.name) {
+            getNextNodeTaskDone(null, currentNode);
+        } else {
+
+            FileSystemFile.findOne(conditions)
+                .exec(function(err, doc) {
+                    if (err) {
+                        getNextNodeTaskDone(err);
+                    } else if (doc) {
+                        currentNode = doc;
+                        var nextConditions = {
+                            directory: doc._id,
+                            name: nameStack.pop()
+                        };
+                        getNextNode(nextConditions, getNextNodeTaskDone);
+                    } else {
+                        getNextNodeTaskDone(new Error('Not found'));
+                    }
+                });
+        }
+    }
+
+    FileSystemDirectory.findOne({
+        directory: null,
+        name: 'Site Root'
+    }).exec(function(err, directoryDoc) {
+        if (err) {
+            return findByPathTaskDone(err);
+        }
+
+        var rootConditions = {
+            directory: directoryDoc._id,
+            name: nameStack.pop()
+        };
+
+        console.log(rootConditions);
+        
+        getNextNode(rootConditions, function(err, finalNode) {
+            if (err) {
+                findByPathTaskDone(err);
+            } else {
+
+                findByPathTaskDone(null, finalNode);
+            }
+        });
+
+    });
+
+
+};
+
+module.exports = mongoose.model('FileSystemFile', FileSystemFileSchema);

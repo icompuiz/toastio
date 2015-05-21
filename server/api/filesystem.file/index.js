@@ -25,6 +25,7 @@ var FilesystemFileResource = restful
 
 FilesystemFileController.attach(FilesystemFileResource);
 
+
 module.exports = {
 	resource:  FilesystemFileResource,
 	controller: FilesystemFileController,

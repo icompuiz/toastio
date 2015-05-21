@@ -83,18 +83,18 @@
 						.file
 							span.corner
 							.icon(ng-if="!file.isImage && !file.isZip")
-								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+								a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
 									i.fa.fa-file
 							.icon(ng-if="file.isZip")
-								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+								a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
 									i.fa.fa-file-archive-o
 							.image(ng-if="file.isImage")
-								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+								a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
 									img.file-explorer-image-preview.img-responsive(ng-src="/api/files/{{ file._id }}/download?v=small&name={{file.name}}")
 							.file-name
-								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+								a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
 									| {{ file.name }}
-									br
+								br
 								small Added: {{ file.created | date }}
 								.pull-right
 									.dropdown(dropdown="")
@@ -103,5 +103,5 @@
 										ul.dropdown-menu.animated.fadeInRight
 											li
 												a(ng-click="extract(file)", ng-if="file.isZip") Extract Here
-												a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}") Download
+												a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}") Download
 												a(ng-click="deleteFile(file)") Delete
