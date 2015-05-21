@@ -16,6 +16,7 @@ var restful = require('node-restful');
 
 var FilesystemFile = require('./filesystem.file.model');
 var FilesystemImageFile = require('./filesystem.imagefile.model');
+var FilesystemZipFile = require('./filesystem.zipfile.model');
 var FilesystemFileController = require('./filesystem.file.controller');
 
 var FilesystemFileResource = restful

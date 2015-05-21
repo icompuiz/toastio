@@ -29,7 +29,7 @@
 							li
 								a(ui-sref="main.folder.create({ directory: formdata._id })") Folder 
 							li
-								a(ui-sref="main.file.create({ folderid: formdata._id })") File
+								a(ui-sref="main.file.create({ folderid: formdata._id })") Upload Files
 					div(ng-if="formdata._id")
 						table.table
 							thead
@@ -82,9 +82,12 @@
 					.file-box(ng-repeat="file in formdata.files")
 						.file
 							span.corner
-							.icon(ng-if="!file.isImage")
+							.icon(ng-if="!file.isImage && !file.isZip")
 								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
 									i.fa.fa-file
+							.icon(ng-if="file.isZip")
+								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+									i.fa.fa-file-archive-o
 							.image(ng-if="file.isImage")
 								a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
 									img.file-explorer-image-preview.img-responsive(ng-src="/api/files/{{ file._id }}/download?v=small&name={{file.name}}")
@@ -99,5 +102,6 @@
 											i.fa.fa-chevron-down
 										ul.dropdown-menu.animated.fadeInRight
 											li
+												a(ng-click="extract(file)", ng-if="file.isZip") Extract Here
 												a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}") Download
 												a(ng-click="deleteFile(file)") Delete

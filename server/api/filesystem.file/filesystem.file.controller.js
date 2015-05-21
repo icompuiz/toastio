@@ -13,6 +13,7 @@ var apiUtils = components.apiUtils;
 var getFileModelForType;
 exports.getFileModelForType = getFileModelForType = function getFileModelForType(type) {
 
+	var ZipFile = mongoose.model('FileSystemZipFile');
 	var ImageFile = mongoose.model('FileSystemImageFile');
 	var File = mongoose.model('FileSystemFile');
 
@@ -20,6 +21,8 @@ exports.getFileModelForType = getFileModelForType = function getFileModelForType
 
 	if (type.match(/^image/)) {
 		model = ImageFile;
+	} else if (type.match(/zip/)) {
+		model = ZipFile;
 	}
 
 	return model;
@@ -181,15 +184,36 @@ exports.uploadFiles = uploadFiles = function uploadFiles(req, res) {
 				return res.send(500, err.message || err);
 			}
 			res.jsonp(200, savedFiles);
-			// Directory.findById(directoryId).populate('files').exec(function(err, directory) {
-			// 	if (err) {
-			// 		return res.send(500, err.message || err);
-			// 	}
 
-			// });
 		});
 
 	}
+
+};
+
+var extractFile;
+exports.extractFile = extractFile = function extractFile(req, res) {
+
+	var FileSystemZipFileModel = mongoose.model('FileSystemZipFile');
+
+	var fileId = req.params.id;
+
+	FileSystemZipFileModel
+		.findById(fileId)
+		.exec(function(err, fileDoc) {
+
+			fileDoc.extract(function(err) {
+
+				if (err) {
+					return res.status(500).send(err);
+				}
+
+				res.status(200).send('File unzipped successfully')
+
+			});
+
+		});
+
 
 };
 
@@ -293,6 +317,11 @@ exports.attach = function(FileSystemFileResource) {
 	FileSystemFileResource.route('download.get', {
 		detail: true,
 		handler: downloadFile
+	});
+
+	FileSystemFileResource.route('extract.post', {
+		detail: true,
+		handler: extractFile
 	});
 
 	FileSystemFileResource.route('file.post', {

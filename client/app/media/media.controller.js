@@ -12,10 +12,11 @@ angular.module('toastio')
             var groupedItems = _.groupBy($scope.formdata.items, '_class');
 
             $scope.formdata.folders = groupedItems.FileSystemDirectory;
-            $scope.formdata.files = (groupedItems.FileSystemFile || []).concat(groupedItems.FileSystemImageFile || []);
+            $scope.formdata.files = (groupedItems.FileSystemFile || []).concat(groupedItems.FileSystemImageFile || []).concat(groupedItems.FileSystemZipFile || []);
 
             $scope.formdata.files = _.map($scope.formdata.files, function(d) {
                 d.isImage = d.type.match('image');
+                d.isZip = d.type.match('zip');
                 return d;
             });
 
@@ -99,6 +100,26 @@ angular.module('toastio')
                 }
 
             });
+
+        };
+
+        $scope.extract = function(file) {
+
+            PopupSvc.confirm('Are you sure?').then(function(confirmed) {
+                if (confirmed) {
+                    Restangular
+                        .one('files', file._id)
+                        .one('extract')
+                        .post()
+                        .then(function(result) {
+                            reloadDirectory();
+                        }, function(err) {
+                            reloadDirectory();
+                            // notify
+                        });
+                }
+            });
+
 
         };
 
