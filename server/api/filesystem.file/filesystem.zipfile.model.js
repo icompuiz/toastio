@@ -54,7 +54,7 @@ var extract = function(extractCb) {
 
     var zipfile = this;
 
-    var tmpfilepath = path.join(os.tmpdir(), Date.now() + '_' + zipfile.name);
+    var tmpfilepath = path.join(os.tmpdir(),  Date.now() + '_' + zipfile.name);
 
     var ext = path.extname(tmpfilepath);
     var destination = tmpfilepath.replace(ext, '');
@@ -133,129 +133,27 @@ var extract = function(extractCb) {
 
     }
 
+    function recursiveUpload(recursiveUploadCb, autodeps) {
 
+        function uploadfile(filename, parentDirectoryDoc, stat, uploadFileCb) {
 
-    function processextractedfiles(processextractedfilesCb, autodeps) {
+            var type = mime.lookup(filename);
+            var fileData = {
+                path: filename,
+                name: path.basename(filename),
+                type: type,
+                size: stat.size,
+                directory: parentDirectoryDoc._id
+            };
 
-        var directories = {};
-
-        directories[destination] = {
-            _id: mongoose.Types.ObjectId(),
-            path: destination,
-            name: destinationName,
-            items: []
-        };
-
-        var files = {};
-
-        function stat(filepath, statcb) {
-
-            fs.stat(filepath, function(err, statResult) {
-
-                if (err) {
-                    return statcb(err);
-                }
-
-                if (statResult.isDirectory()) {
-
-                    directories[filepath] = {
-                        _id: mongoose.Types.ObjectId(),
-                        path: filepath,
-                        name: path.basename(filepath),
-                        items: []
-                    };
-
-                } else {
-                    var fileData = {
-                        _id: mongoose.Types.ObjectId(),
-                        path: filepath,
-                        name: path.basename(filepath),
-                        type: mime.lookup(filepath),
-                        size: statResult.size
-                    };
-
-                    files[filepath] = fileData;
-                }
-
-                statcb(err);
-
-            });
-
-        }
-
-
-        async.map(autodeps.extractedFiles, stat, function(err) {
-
-            if (err) {
-                return processextractedfilesCb(err);
-            }
-
-            var fileMap = _.map(_.values(files), function(fileData) {
-                var parentDirectory = directories[path.dirname(fileData.path)];
-                if (parentDirectory) {
-                    fileData.directory = parentDirectory._id;
-                    parentDirectory.items.push(fileData._id);
-                } else {
-                    fileData.directory = zipfile.directory;
-                }
-                return fileData;
-            });
-
-            var directoryMap = _.map(_.values(directories), function(directoryData) {
-                var parentDirectory = directories[path.dirname(directoryData.path)];
-                if (parentDirectory) {
-                    directoryData.directory = parentDirectory._id;
-                    parentDirectory.items.push(directoryData._id);
-                } else {
-                    directoryData.directory = zipfile.directory;
-                }
-                return directoryData;
-            });
-
-            directoryMap = _.sortBy(directoryMap, 'path');
-            fileMap = _.sortBy(fileMap, 'path');
-
-            processextractedfilesCb(null, {
-                directories: directoryMap,
-                files: fileMap
-            });
-
-        });
-
-    }
-
-    function createdirectories(createdirectoriesCb, autodeps) {
-        console.log(autodeps.filedata.directories);
-
-        var FileSystemDirectoryModel = mongoose.model('FileSystemDirectory');
-        async.eachSeries(autodeps.filedata.directories, function(directoryData, createNext) {
-            var directoryDoc = new FileSystemDirectoryModel(directoryData);
-            directoryDoc.save(function(err) {
-            	if (err) {
-                console.log('Directory %s exists', directoryData.name);            		
-                return createNext(err);
-            	}
-              console.log('Directory %s created', directoryData.name);            		
-              createNext();
-            });
-        }, createdirectoriesCb);
-
-
-    }
-
-    function uploadfiles(uploadfilesCb, autodeps) {
-
-        async.each(autodeps.filedata.files, function(fileData, createNext) {
-
-            var FileModel = getFileModelForType(fileData.type);
+            var FileModel = getFileModelForType(type);
             var fileDoc = new FileModel(fileData);
-
-            fileDoc.tmpFile = fileData;
+            fileDoc.tmpData = fileDoc;
 
             function onFileCopied(err, gridStoreFile) {
 
                 if (err) {
-                    return createNext(err);
+                    return uploadFileCb(err);
                     // return console.log('Error %s', err);
                 }
 
@@ -263,9 +161,9 @@ var extract = function(extractCb) {
 
                 fileDoc.save(function(err) {
                     if (err) {
-                        return createNext(err);
+                        return uploadFileCb(err);
                     }
-                    createNext();
+                    uploadFileCb();
                 });
             }
 
@@ -278,7 +176,61 @@ var extract = function(extractCb) {
 
             fileDoc.copyFile(copyData, onFileCopied);
 
-        }, uploadfilesCb);
+
+        }
+
+        function uploadDirectory(directoryName, parentDirectoryDoc, uploadDirectoryCb, usename) {
+
+            console.log('Uploading directory %s', directoryName);
+
+            function createDirectory(createDirectoryCb) {
+                var FileSystemDirectoryModel = mongoose.model('FileSystemDirectory');
+                var directoryDoc = new FileSystemDirectoryModel({
+                    name: usename || path.basename(directoryName),
+                    directory: parentDirectoryDoc._id,
+                    items: []
+                });
+
+                directoryDoc.save(function(err) {
+                    createDirectoryCb(err, directoryDoc);
+                });
+            }
+
+            function processFiles(directoryDoc, processFilesCb) {
+
+                fs.readdir(directoryName, function(err, files) {
+
+                    async.each(files, function iterator(basename, iteratorCb) {
+
+                        var filename = path.join(directoryName, basename);
+
+                        var stat = fs.statSync(filename);
+
+                        if (stat.isDirectory()) {
+                            uploadDirectory(filename, directoryDoc, iteratorCb);
+                        } else {
+                            uploadfile(filename, directoryDoc, stat, iteratorCb);
+                        }
+
+                    }, processFilesCb);
+
+                });
+            }
+
+            var tasks = [
+                createDirectory,
+                processFiles
+            ];
+
+            async.waterfall(tasks, uploadDirectoryCb);
+        }
+
+
+        var parentDoc = {
+            _id: zipfile.directory
+        };
+
+        uploadDirectory(destination, parentDoc, recursiveUploadCb, destinationName);
 
     }
 
@@ -300,9 +252,9 @@ var extract = function(extractCb) {
         }
 
         async.parallel([
-        	deleteZip, 
-        	deleteDir
-      	], deletetempfilesCb);
+            deleteZip,
+            deleteDir
+        ], deletetempfilesCb);
 
 
     }
@@ -310,25 +262,26 @@ var extract = function(extractCb) {
     var tasks = {
         'tmpfilepath': [writetodisk],
         'extractedFiles': ['tmpfilepath', extractfile],
-        'filedata': ['extractedFiles', processextractedfiles],
-        'directories': ['filedata', createdirectories],
-        'uploadfiles': ['directories', uploadfiles]
+        'recursiveUpload': ['extractedFiles', recursiveUpload],
+        // 'filedata': ['extractedFiles', processextractedfiles],
+        // 'directories': ['filedata', createdirectories],
+        // 'uploadfiles': ['directories', uploadfiles]
     };
 
     async.auto(tasks, function(err) {
-    	deletetempfiles(function(deleteErrs) {
-    		if (deleteErrs) {
-    			return extractCb(deleteErrs);
-    		}
+        deletetempfiles(function(deleteErrs) {
+            if (deleteErrs) {
+                return extractCb(deleteErrs);
+            }
 
-    		if (err) {
-    			return extractCb(err);
-    		}
+            if (err) {
+                return extractCb(err);
+            }
 
 
-    		extractCb();
+            extractCb();
 
-    	});
+        });
     });
 
 };

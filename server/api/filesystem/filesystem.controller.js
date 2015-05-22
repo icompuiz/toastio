@@ -271,7 +271,9 @@ function searchFileSystem(query, searchFileSystemCb) {
 
 function getFileByPath(req, res) {
 
-    var filePath = req.url.replace(/^\/(tcms|tmedia|tio)/, '');
+    var filePath = req.path.replace(/^\/(tcms|tmedia|tio)/, '');
+    delete req.query.v;
+    delete req.query.version;
 
     console.log('Get File By Path', filePath);
 

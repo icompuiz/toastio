@@ -15,7 +15,7 @@ angular.module('toastio')
             $scope.formdata.files = (groupedItems.FileSystemFile || []).concat(groupedItems.FileSystemImageFile || []).concat(groupedItems.FileSystemZipFile || []);
 
             $scope.formdata.files = _.map($scope.formdata.files, function(d) {
-                d.isImage = d.type.match('image');
+                d.isImage = d.type.match(/^image/) && !d.type.match(/svg/);
                 d.isZip = d.type.match('zip');
                 return d;
             });

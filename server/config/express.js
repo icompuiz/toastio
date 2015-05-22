@@ -29,6 +29,10 @@ module.exports = function(app) {
   app.set('view engine', 'jade');
   app.use(compression());
 
+  app.use(bodyParser({
+    limit: '100mb'
+  }));
+
   app.use(bodyParser.raw());
   app.use(express.query());
   app.use(bodyParser.urlencoded({
