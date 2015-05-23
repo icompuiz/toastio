@@ -3,15 +3,15 @@ nav.navbar-default.navbar-static-side(role='navigation')
 		ul#side-menu.nav(side-navigation='')
 			li.nav-header
 				span.dropdown.profile-element(dropdown='')
-					img.img-circle(src="http://placehold.it/48x48.png")
+					//- img.img-circle(src="http://placehold.it/48x48.png")
 					a.dropdown-toggle(dropdown-toggle='', href='')
 						span.clear
 							span.block.m-t-xs
-								strong.small.font-bold {{ main.session.user.username }}
+								strong.small.font-bold {{ (main.session.user.fullName || main.session.user.username) | limitTo:20 }}&nbsp;
 								b.caret
 					ul.dropdown-menu.animated.fadeInRight.m-t-xs
 						li
-							a(ui-sref="settings.users({ userid: main.session.user._id })") Profile
+							a(ui-sref="users.edit({ userid: main.session.user._id })") Account
 						li
 							a(ng-click="main.logout()") Logout
 				.logo-element.bree-serif tcms
@@ -52,9 +52,9 @@ nav.navbar-default.navbar-static-side(role='navigation')
 					span.fa.arrow
 				ul.nav.nav-second-level(ng-class="{in: $state.includes('settings')}")
 					li(ui-sref-active="active")
-						a(ui-sref='settings.variables') Variables
+						a(ui-sref='variables') Variables
 					li(ui-sref-active="active")
-						a(ui-sref='settings.accounts') Accounts
+						a(ui-sref='users.list') Users
 			li(ng-class="{active: $state.includes('help')}")
 				a(ui-sref='help')
 					i.fa.fa-question

@@ -17,7 +17,17 @@ angular.module('toastio')
             .state('documents.add', {
                 url: '/add/:parentid',
                 templateUrl: 'app/documents/documents-edit.html',
-                controller: 'DocumentsEditCtrl'
+                controller: 'DocumentsEditCtrl',
+                resolve: {
+                    loadPlugin: function($ocLazyLoad) {
+                        return $ocLazyLoad.load([{
+                            name: 'localytics.directives',
+                            files: ['lazy_components/chosen/chosen.css', 'lazy_components/chosen/chosen.jquery.js', 'lazy_components/chosen/chosen.js']
+                        },{
+                            files: ['lazy_components/iCheck/css/custom.css','lazy_components/iCheck/icheck.min.js']
+                        }]);
+                    }
+                }
             })
             .state('documents.edit', {
                 url: '/edit/:documentid',

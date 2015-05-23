@@ -1,6 +1,18 @@
+function makeid(len) {
+	len = len || 5;
+	var text = '';
+	var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+	for (var i = 0; i < len; i++) {
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
+	return text;
+
+}
+
 module.exports.root = {
 	username: 'root',
-	password: 'kFVOBbo6DsSyHMDEHUyh',
+	password: makeid(19),
 	fullName: 'root',
 	system: true,
 	organization: null,
@@ -17,7 +29,7 @@ module.exports.root = {
 
 module.exports.public = {
 	username: 'public',
-	password: '3456789098734567890',
+	password: makeid(19),
 	groups: ['public'],
 	fullName: 'public',
 	system: true,

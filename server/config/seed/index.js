@@ -14,6 +14,7 @@ var filesystemFile = require('./filesystem.file');
 var filesystemDirectory = require('./filesystem.directory');
 var user = require('./user');
 var group = require('./group');
+var misc = require('./misc');
 	
 var tasks = {
 	'removeAccessControlLists': accesscontrol.removeAccessControlLists,
@@ -23,6 +24,7 @@ var tasks = {
 	'removeRoutes': route.remove,
 	'removeUsers': user.remove,
 	'removeGroups': group.remove,
+	'removeMisc': misc.remove,
 	'addGroups': group.add,
 	'addRootUser': user.addRootUser,
 	'addPublicUser': user.addPublicUser,

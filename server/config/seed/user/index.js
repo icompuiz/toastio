@@ -48,7 +48,7 @@ function addUser(userObj, cb) {
 	var User = mongoose.model('User');
 	var Group = mongoose.model('Group');
 
-	var password = userObj.password; // Copy password as we pass this seprately so it can be hashed
+	var password = userObj.password; // Copy password as we pass this separately so it can be hashed
 
 	// lets convert the array of groups to the corresponding ids
 	function mapUserGroups(mapUserGroupsTaskDoneCB) {
@@ -156,6 +156,7 @@ function addRootUser(cb) {
 
 function addPublicUser(cb) {
 	var User = mongoose.model('User');
+
 
 	addUser(publicUserData, function(err, result) {
 		if (err) {

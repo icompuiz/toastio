@@ -49,12 +49,14 @@ function commandWhoami(req, res) {
 
 	var id = req.user._id.toString();
 	var username = req.user.username;
+	var fullName = req.user.fullName;
 
 	if (req.query.noresources) {
 
 		var user = {
 			_id: id,
 			username: username,
+			fullName: fullName
 		};
 
 		res.jsonp(200, user);
@@ -74,6 +76,7 @@ function commandWhoami(req, res) {
 				_id: req.user._id,
 				username: req.user.username,
 				resources: resources,
+				fullName: fullName
 			};
 
 			res.json(200, user);

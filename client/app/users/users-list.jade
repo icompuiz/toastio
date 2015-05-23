@@ -1,0 +1,22 @@
+.row.wrapper.border-bottom.white-bg.page-heading
+	.col-lg-9
+		a(ui-sref="users.list({ userid: null })")
+			h2 Users
+.wrapper.wrapper-content
+	.row
+		.col-lg-3
+			.ibox.float-e-margins
+				.ibox-content
+					button.btn.btn-primary.btn-block(ui-sref="users.add") Create User
+		.col-lg-9.animated.fadeInRight
+			.row
+				.col-lg-12
+					.file-box(ng-repeat="user in users")
+						.file
+							span.corner
+							.icon
+								a(ui-sref="users.edit({ userid: user._id })")
+									i.fa.fa-user
+							.file-name
+								a(ui-sref="users.edit({ userid: user._id })")
+									| {{ user.username }}

@@ -133,6 +133,10 @@ angular.module('toastio')
 
         function onDocumentLoaded(documentDoc) {
 
+            if (!documentDoc) {
+                return loadTypes();
+            }
+
             $scope.formdata = documentDoc;
 
             documentDoc.one('tree').get().then(function(treeStack) {
@@ -152,6 +156,10 @@ angular.module('toastio')
 
         function onParentDocumentLoaded(parentDocumentDoc) {
 
+            if (!parentDocumentDoc) {
+                return loadTypes();
+            }
+
             $scope.formdata.parent = parentDocumentDoc._id;
             $scope.parent = parentDocumentDoc;
 
@@ -164,7 +172,7 @@ angular.module('toastio')
             });
 
             loadTypes();
-            
+
         }
 
         function onParentDocumentNotLoaded() {}
@@ -172,6 +180,11 @@ angular.module('toastio')
         function onDocumentNotLoaded() {}
 
         function loadDocument(documentid, onSuccess, onError) {
+
+            if (!documentid) {
+                return onSuccess();
+            }
+
             onSuccess = onSuccess || angular.noop;
             onError = onError || angular.noop;
             var query = Restangular.one('documents', documentid).get({
