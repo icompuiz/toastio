@@ -40,33 +40,32 @@ function searchFileSystem(query, searchFileSystemCb) {
 
     if (query.directorySort) {
         directorySearchConfig.sort = query.directorySort;
-    }
 
-    if (query.limit) {
-        directorySearchConfig.limit = query.limit;
-        fileSearchConfig.limit = query.limit;
-    }
-
-    if (query.fileLimit) {
-        fileSearchConfig.limit = query.fileLimit;
-    }
-
-    if (query.directoryLimit) {
-        directorySearchConfig.limit = query.directoryLimit;
-    }
+        if (query.directoryLimit) {
+            directorySearchConfig.limit = query.directoryLimit;
+        }
 
 
-    if (query.id) {
-        hasDirParams = true;
-        hasFileParams = true;
-        // directorySearchConfig.conditions._id = query.id;
-        // fileSearchConfig.conditions._id = query.id;
-        var idCond = {
+        if (query.id) {
+            hasDirParams = true;
+            hasFileParams = true;
+        }
+
+        if (query.limit) {
+            directorySearchConfig.limit = query.limit;
+            fileSearchConfig.limit = query.limit;
+        }
+
+        if (query.fileLimit) {
+            fileSearchConfig.limit = query.fileLimit;
+        }
+
+        var generalIdCondition = {
             _id: query.id
         };
 
-        directorySearchConfig.conditions.$and.push(idCond);
-        fileSearchConfig.conditions.$and.push(idCond);
+        directorySearchConfig.conditions.$and.push(generalIdCondition);
+        fileSearchConfig.conditions.$and.push(generalIdCondition);
 
     }
 
@@ -74,40 +73,40 @@ function searchFileSystem(query, searchFileSystemCb) {
         hasDirParams = true;
         hasFileParams = true;
 
-        var nameCond = {
+        var generalNameCondition = {
             name: {
                 $regex: '.*' + query.name + '.*',
                 $options: 'i'
             }
         };
 
-        directorySearchConfig.conditions.$and.push(nameCond);
-        fileSearchConfig.conditions.$and.push(nameCond);
+        directorySearchConfig.conditions.$and.push(generalNameCondition);
+        fileSearchConfig.conditions.$and.push(generalNameCondition);
 
     }
 
     if (query.directoryId) {
         hasDirParams = true;
 
-        var idCond = {
+        var directoryIdCondition = {
             _id: query.directoryId
         };
 
-        directorySearchConfig.conditions.$and.push(idCond);
+        directorySearchConfig.conditions.$and.push(directoryIdCondition);
     }
 
     if (query.directoryName) {
         hasDirParams = true;
 
 
-        var nameCond = {
+        var directoryNameCondition = {
             name: {
                 $regex: '.*' + query.directoryName + '.*',
                 $options: 'i'
             }
         };
 
-        directorySearchConfig.conditions.$and.push(nameCond);
+        directorySearchConfig.conditions.$and.push(directoryNameCondition);
     }
 
     if (query.fileName) {
@@ -126,11 +125,11 @@ function searchFileSystem(query, searchFileSystemCb) {
     if (query.fileId) {
         hasFileParams = true;
 
-        var idCond = {
+        var fileIdCondition = {
             _id: query.fileId
         };
 
-        fileSearchConfig.conditions.$and.push(idCond);
+        fileSearchConfig.conditions.$and.push(fileIdCondition);
     }
 
     if (query.fileType) {
@@ -291,10 +290,10 @@ function getFileByPath(req, res) {
 
         req.params.id = fileDoc._id;
         FileSystemFileCtrl.downloadFile(req, res);
-        
+
     }
 
-   
+
     FileSystemFileModel.findByPath(filePath, getFile);
 
 

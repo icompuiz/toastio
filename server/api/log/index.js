@@ -15,16 +15,16 @@
 var restful = require('node-restful');
 
 var Log = require('./log.model');
-var LogController = require('./log.controller');
+var logController = require('./log.controller');
 
 var LogResource = restful
                 .model(Log.modelName,Log.schema)
                 .methods(['get','put','delete','post']);         
 
-LogController(LogResource);
+logController(LogResource);
 
 module.exports = {
 	resource:  LogResource,
-	controller: LogController,
+	controller: logController,
 	model: Log
 };

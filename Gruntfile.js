@@ -149,14 +149,14 @@ module.exports = function(grunt) {
                 src: ['server/**/*.{spec,integration}.js']
             },
             all: [
-                '<%= yeoman.client %>/{app,components}/**/*.js',
-                '!<%= yeoman.client %>/{app,components}/**/*.spec.js',
-                '!<%= yeoman.client %>/{app,components}/**/*.mock.js'
+                '<%= yeoman.client %>/{app}/**/*.js',
+                '!<%= yeoman.client %>/{app}/**/*.spec.js',
+                '!<%= yeoman.client %>/{app}/**/*.mock.js'
             ],
             test: {
                 src: [
-                    '<%= yeoman.client %>/{app,components}/**/*.spec.js',
-                    '<%= yeoman.client %>/{app,components}/**/*.mock.js'
+                    '<%= yeoman.client %>/{app}/**/*.spec.js',
+                    '<%= yeoman.client %>/{app}/**/*.mock.js'
                 ]
             }
         },
@@ -447,8 +447,8 @@ module.exports = function(grunt) {
             dist: [
                 'jade',
                 'sass',
-                'imagemin',
-                'svgmin'
+                // 'imagemin',
+                // 'svgmin'
             ]
         },
 
@@ -596,15 +596,10 @@ module.exports = function(grunt) {
                 files: {
                     '<%= yeoman.client %>/client.html': [
                         [
-                            '{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
+                            '{.tmp,<%= yeoman.client %>}/app/**/*.js',
                             '!{.tmp,<%= yeoman.client %>}/app/app.js',
-                            '!{.tmp,<%= yeoman.client %>}/components/jquery-ui/jquery-ui.js',
-                            '!{.tmp,<%= yeoman.client %>}/components/jquery-ui/i18n/**/*.js',
-                            '!{.tmp,<%= yeoman.client %>}/components/oclazyload/dist/ocLazyLoad.js',
-                            '!{.tmp,<%= yeoman.client %>}/components/oclazyload/examples/**/*.js',
-                            '!{.tmp,<%= yeoman.client %>}/components/slimscroll/jquery.slimscroll.js',
-                            '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
-                            '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js',
+                            '!{.tmp,<%= yeoman.client %>}/app/**/*.spec.js',
+                            '!{.tmp,<%= yeoman.client %>}/app/**/*.mock.js',
                         ]
                     ]
                 }
@@ -623,7 +618,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= yeoman.client %>/app/app.scss': [
-                        '<%= yeoman.client %>/{app,components}/**/*.{scss,sass}',
+                        '<%= yeoman.client %>/app/**/*.{scss,sass}',
                         '!<%= yeoman.client %>/app/app.{scss,sass}'
                     ]
                 }
@@ -642,8 +637,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= yeoman.client %>/client.html': [
-                        '<%= yeoman.client %>/{app,components}/**/*.css',
-                        '!<%= yeoman.client %>/components/oclazyload/examples/**/*.css'
+                        '<%= yeoman.client %>/app/**/*.css'
                     ]
                 }
             }

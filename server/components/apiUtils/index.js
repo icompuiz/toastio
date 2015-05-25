@@ -136,9 +136,9 @@ var addPermissionChecks = function(resource, model) {
 		}
 
 		if (!doc) {
-			var error = new Error('Error checking permissions on document: Document not found');
-			error.errorCode = 404;
-			return callback(error);
+			var notFoundError = new Error('Error checking permissions on document: Document not found');
+			notFoundError.errorCode = 404;
+			return callback(notFoundError);
 		}
 
 		if (doc.acl && _.isFunction(doc.isAllowed)) {
@@ -146,36 +146,11 @@ var addPermissionChecks = function(resource, model) {
 		} else if (doc._id) {
 			return checkDocumentById(doc, action, callback)
 		} else {
-			var error = new Error('Error checking permissions on document');
-			error.errorCode = 400;
-			return callback(error);
+			var generalPermissionsErr = new Error('Error checking permissions on document');
+			generalPermissionsErr.errorCode = 400;
+			return callback(generalPermissionsErr);
 		}
 
-
-		// if (doc) {
-		// 	if (false && _.isFunction(doc.isAllowed) && (!doc.acl)) {
-		// 		console.log('Resetting ACL for model', doc._id, doc.name || doc.username);
-		// 		doc.resetACL(function(err) {
-		// 			if (err) {
-		// 				callback(500, 'Unexpected error:' + (err.message || err));
-		// 			}
-		// 			doc.constructor.findByIdAndUpdate(doc._id, {
-		// 				$set: {
-		// 					acl: doc.acl
-		// 				}
-		// 			}, function(err) {
-		// 				if (err) {
-		// 					callback(500, 'Unexpected error:' + (err.message || err));
-		// 				}
-		// 				doCheck();
-		// 			});
-		// 		});
-		// 	} else {
-		// 		doCheck();
-		// 	}
-		// } else {
-		// 	callback(404, 'Resource not found');
-		// }
 	}
 
 	function checkDocumentById(item, action, callback) {

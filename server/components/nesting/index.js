@@ -11,13 +11,13 @@ var DeleteChildrenPlugin = function(schema, options) {
 		var childModel = options.childModel;
 
 		if (!parentField) {
-			var err = new Error('parentField not defined');
-			return done(err);
+			var parentFieldErr = new Error('parentField not defined');
+			return done(parentFieldErr);
 		}
 
 		if (!childModel) {
-			var err = new Error('childModel not defined');
-			return done(err);
+			var childModelErr = new Error('childModel not defined');
+			return done(childModelErr);
 		}
 		// must delete all campuses 
 
