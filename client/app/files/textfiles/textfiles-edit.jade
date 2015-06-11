@@ -1,14 +1,18 @@
 .row.wrapper.border-bottom.white-bg.page-heading
 	.col-lg-9
-		a(ui-sref="blocks.list({ blockid: null })")
-			h2 Blocks
-		ol.breadcrumb(ng-if="treeStack")
-			strong {{ formdata.name }}
+		h2 Site Resources
+		ol.breadcrumb(ng-if="formdata.directory")
+			li(ng-if="siteroot")
+				a(ui-sref="media") {{ siteroot.name }}
+			li(ng-repeat="folder in folders")
+				a(ui-sref="media.folder({ folderid: folder._id })") {{ folder.name }}
+			li.active
+				strong {{ formdata.name }}
 
 .wrapper.wrapper-content.animated.fadeInRight
 	.row
 		.col-lg-12
-			form.form(name="BlockForm", ng-submit="submit()", hk-ctrl-s="submit")
+			form.form(name="TextFileForm", ng-submit="submit()", hk-ctrl-s="submit")
 				.ibox.float-e-margins
 					.ibox-title 
 						.btn-toolbar.pull-right
@@ -16,8 +20,6 @@
 							button.btn.btn-xs.btn-primary(ng-disabled="saveState !== 'ready'", ng-class="{'btn-primary': saveState === 'ready', 'btn-success': saveState === 'success', 'btn-info': saveState === 'waiting', 'btn-danger': saveState === 'failed'}") {{ saveBtnText }}
 					.ibox-content
 							.form-group
-								label.control-label Name
-								input.form-control(type="text", placeholder="Block Name", ng-model="formdata.name", required="true")
-							
+								label.control-label {{ formdata.name }}
 							.form-group
 								ui-codemirror.tc-CodeMirror(ui-codemirror-opts="editorOptions", ng-model="formdata.text")

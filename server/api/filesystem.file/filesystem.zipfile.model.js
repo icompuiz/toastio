@@ -13,6 +13,7 @@ var mongoose = require('mongoose'),
 require('mongoose-schema-extend');
 
 var FileSystemFile = require('./filesystem.file.model');
+var FileSystemFileApi = require('./filesystem.file.controller');
 
 var FileSystemZipFileSchema = FileSystemFile.schema.extend({});
 
@@ -24,31 +25,6 @@ FileSystemZipFileSchema.set('toJSON', {
 FileSystemZipFileSchema.set('toObject', {
     virtuals: true
 });
-
-FileSystemZipFileSchema.pre('save', function(done) {
-
-    console.log('Uploading zip file');
-
-    done();
-
-});
-
-function getFileModelForType(type) {
-
-    var ZipFile = mongoose.model('FileSystemZipFile');
-    var ImageFile = mongoose.model('FileSystemImageFile');
-    var File = mongoose.model('FileSystemFile');
-
-    var model = File;
-
-    if (type.match(/^image/) && !type.match(/svg/)) {
-        model = ImageFile;
-    } else if (type.match(/zip/)) {
-        model = ZipFile;
-    }
-
-    return model;
-}
 
 var extract = function(extractCb) {
 
@@ -68,7 +44,7 @@ var extract = function(extractCb) {
         function receiveStream(err, gridFsStream) {
 
             if (err) {
-                return extractCb(err);
+                return writetodiskCb(err);
             }
 
             var readableStream = gridFsStream.stream(true);
@@ -146,7 +122,7 @@ var extract = function(extractCb) {
                 directory: parentDirectoryDoc._id
             };
 
-            var FileModel = getFileModelForType(type);
+            var FileModel = FileSystemFileApi.getFileModelForType(type);
             var fileDoc = new FileModel(fileData);
             fileDoc.tmpData = fileDoc;
 

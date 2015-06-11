@@ -11,12 +11,12 @@
 .wrapper.wrapper-content.animated.fadeInRight
 	.row
 		.col-lg-12
-			form.form(name="TemplateForm", ng-submit="submit()")
+			form.form(name="TemplateForm", ng-submit="submit()", hk-ctrl-s="submit")
 				.ibox.float-e-margins
 					.ibox-title 
 						.btn-toolbar.pull-right
 							a.btn.btn-xs.btn-white(ng-click="cancel()") Cancel
-							button.btn.btn-xs.btn-primary Save Changes
+							button.btn.btn-xs.btn-primary(ng-disabled="saveState !== 'ready'", ng-class="{'btn-primary': saveState === 'ready', 'btn-success': saveState === 'success', 'btn-info': saveState === 'waiting', 'btn-danger': saveState === 'failed'}") {{ saveBtnText }}
 					.ibox-content
 							.form-group
 								label.control-label Name
@@ -27,7 +27,7 @@
 								input.form-control(type="text", placeholder="Template Alias", ng-model="formdata.alias", required="true")
 							
 							.form-group
-								ui-codemirror(ui-codemirror-opts="editorOptions", ng-model="formdata.text")
+								ui-codemirror.tc-CodeMirror(ui-codemirror-opts="editorOptions", ng-model="formdata.text")
 							.form-group(ng-non-bindable="")
 								p.text-info.small
 									| Property: {{property name}}

@@ -10,6 +10,7 @@ angular.module('toastio', [
 				'oc.lazyLoad',
 				'restangular',
 				'ngCkeditor',
+				'drahak.hotkeys',
 				'inspinia'
 		])
 		.config(function($stateProvider, $urlRouterProvider, $locationProvider, RestangularProvider, $ocLazyLoadProvider) {

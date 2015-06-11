@@ -18,7 +18,9 @@
     "restangular": "~1.4.0",
     "ocLazyLoad": "~0.6.3",
     "ng-ckeditor": "~0.2.1",
-    "ckeditor": "~4.4.7"
+    "ckeditor": "~4.4.7",
+    "angular-hotkeys": "~0.2.2",
+    "async": "~1.2.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.2",

@@ -11,12 +11,12 @@
 .wrapper.wrapper-content.animated.fadeInRight
 	.row
 		.col-lg-12
-			form.form(name="TypeForm", ng-submit="submit()")
+			form.form(name="TypeForm", ng-submit="submit()", hk-ctrl-s="submit")
 				.ibox.float-e-margins
 					.ibox-title 
 						.btn-toolbar.pull-right
 							a.btn.btn-xs.btn-white(ng-click="cancel()") Cancel
-							button.btn.btn-xs.btn-primary Save Changes
+							button.btn.btn-xs.btn-primary(ng-disabled="saveState !== 'ready'", ng-class="{'btn-primary': saveState === 'ready', 'btn-success': saveState === 'success', 'btn-info': saveState === 'waiting', 'btn-danger': saveState === 'failed'}") {{ saveBtnText }}
 					.ibox-content
 							.form-group
 								label.control-label Name
@@ -26,9 +26,14 @@
 								label.control-label Alias
 								input.form-control(type="text", placeholder="Type Alias", ng-model="formdata.alias", required="true")
 
-							.form-group(ng-if="templates")
+							.form-group()
 								label.control-label Template
-								select.form-control.chosen-select(chosen, tabindex="4", ng-model="formdata.template", ng-options="item._id as item.name for item in templates")
+								select.form-control.chosen-select(ng-if="templates", chosen, tabindex="4", ng-model="formdata.template", ng-options="item._id as item.name for item in templates")
+								small(ng-if="!templates")
+									p.text-danger
+										| No Templates Defined. 
+										a(ui-sref="templates.add") 
+											u Define some
 							
 							.form-group
 									table.table
@@ -50,6 +55,8 @@
 														option(value="input-text", selected) Text
 														option(value="input-textarea") Text Area
 														option(value="input-richtext") Rich Text
+														option(value="input-js") JavaScript
+														option(value="input-jade") Jade
 														//- option(value="input-file") File Upload
 														//- option(value="input-date") Date
 														//- option(value="input-daterange") Date Range

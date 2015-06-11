@@ -9,12 +9,12 @@
 .wrapper.wrapper-content.animated.fadeInRight
 	.row
 		.col-lg-12
-			form.form-horizontal(name="UserForm", ng-submit="submit()")
+			form.form-horizontal(name="UserForm", ng-submit="submit()", hk-ctrl-s="submit")
 				.ibox.float-e-margins
 					.ibox-title 
 						.btn-toolbar.pull-right
 							a.btn.btn-xs.btn-white(ng-click="cancel()") Cancel
-							button.btn.btn-xs.btn-primary Save Changes
+							button.btn.btn-xs.btn-primary(ng-disabled="saveState !== 'ready'", ng-class="{'btn-primary': saveState === 'ready', 'btn-success': saveState === 'success', 'btn-info': saveState === 'waiting', 'btn-danger': saveState === 'failed'}") {{ saveBtnText }}
 					.ibox-content
 							label Account Information
 							.form-group

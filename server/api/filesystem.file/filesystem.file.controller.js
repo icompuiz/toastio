@@ -14,6 +14,7 @@ var getFileModelForType;
 exports.getFileModelForType = getFileModelForType = function getFileModelForType(type) {
 
     var ZipFile = mongoose.model('FileSystemZipFile');
+    var TextFile = mongoose.model('FileSystemTextFile');
     var ImageFile = mongoose.model('FileSystemImageFile');
     var File = mongoose.model('FileSystemFile');
 
@@ -23,6 +24,8 @@ exports.getFileModelForType = getFileModelForType = function getFileModelForType
         model = ImageFile;
     } else if (type.match(/zip/)) {
         model = ZipFile;
+    } else if (type.match('text') || type.match('javascript')) {
+        model = TextFile;
     }
 
     return model;
@@ -217,6 +220,33 @@ exports.extractFile = extractFile = function extractFile(req, res) {
 
 };
 
+var editTextFile;
+exports.editTextFile = editTextFile = function editTextFile(req, res) {
+
+    var FileSystemTextFileModel = mongoose.model('FileSystemTextFile');
+
+    var fileId = req.params.id;
+
+    var text = req.body.text;
+
+    FileSystemTextFileModel
+        .findById(fileId)
+        .exec(function(err, fileDoc) {
+
+            fileDoc.edit(text, function(err) {
+
+                if (err) {
+                    return res.status(500).send(err);
+                }
+
+                res.status(200).send('File edited successfully')
+
+            });
+
+        });
+
+};
+
 var incrementDate = function(date, amount) {
     var tmpDate = new Date(date);
     tmpDate.setDate(tmpDate.getDate() + amount);
@@ -267,7 +297,8 @@ exports.downloadFile = downloadFile = function downloadFile(req, res, noCache) {
                 res.header('Expires', incrementDate(new Date(), 10)); // Caching
                 res.header('Last-Modified', file.modified.toGMTString()); // Caching
             }
-            res.header('Content-Disposition', 'filename=' + path.basename(fileStream.filename));
+
+            res.header('Content-Disposition', 'filename="' + path.basename(fileStream.filename) + '"');
 
             var stream = fileStream.stream(true);
             if (file.downloadsRemaining !== -1) {
@@ -322,6 +353,11 @@ exports.attach = function(FileSystemFileResource) {
     FileSystemFileResource.route('extract.post', {
         detail: true,
         handler: extractFile
+    });
+
+    FileSystemFileResource.route('edit.post', {
+        detail: true,
+        handler: editTextFile
     });
 
     FileSystemFileResource.route('file.post', {
@@ -416,7 +452,7 @@ exports.attach = function(FileSystemFileResource) {
 
     FileSystemFileResource.after('get', function(req, res, next) {
 
-    	console.log('Getting parents');
+        console.log('Getting parents');
 
         return res.locals.bundle.getParents(function(err, parents) {
 

@@ -17,7 +17,15 @@ angular.module('toastio')
             .state('types.add', {
                 url: '/add/:parentid',
                 templateUrl: 'app/types/types-edit.html',
-                controller: 'TypesEditCtrl'
+                controller: 'TypesEditCtrl',
+                resolve: {
+                    loadPlugin: function($ocLazyLoad) {
+                        return $ocLazyLoad.load([{
+                            name: 'localytics.directives',
+                            files: ['lazy_components/chosen/chosen.css', 'lazy_components/chosen/chosen.jquery.js', 'lazy_components/chosen/chosen.js']
+                        }]);
+                    }
+                }
             })
             .state('types.edit', {
                 url: '/edit/:typeid',

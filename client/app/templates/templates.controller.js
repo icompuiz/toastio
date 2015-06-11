@@ -79,7 +79,7 @@ angular.module('toastio')
 
 
     })
-    .controller('TemplatesEditCtrl', function($scope, $state, $stateParams, $log, Restangular) {
+    .controller('TemplatesEditCtrl', function($scope, $state, $timeout, $stateParams, $log, Restangular) {
 
         var _loadTemplate = angular.noop;
 
@@ -132,9 +132,12 @@ angular.module('toastio')
 
         $scope.alias = '';
 
+        var saveBtnText = 'Save';
+        $scope.saveBtnText = saveBtnText;
+        $scope.saveState = 'ready';
+
         $scope.editorOptions = {
             lineNumbers: true,
-            matchBrackets: true,
             styleActiveLine: true,
             theme: 'ambiance',
             indentWithTabs: true,
@@ -147,6 +150,9 @@ angular.module('toastio')
                 $scope.formdata.alias.trim();
             }
 
+            $scope.saveBtnText = 'Submitting...';
+            $scope.saveState = 'waiting';
+
             if ($scope.formdata._id) {
 
                 var formdata = $scope.formdata.clone();
@@ -157,6 +163,28 @@ angular.module('toastio')
                 }
 
                 var putRequest = formdata.put();
+
+                putRequest.then(function() {
+
+                    $scope.saveState = 'success';
+                    $scope.saveBtnText = 'Success!';
+
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 500);
+
+                }, function() {
+
+                    $scope.saveState = 'failed';
+                    $scope.saveBtnText = 'See below for error details.';
+
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 2000);
+
+                });
 
                 return putRequest;
 
@@ -173,6 +201,15 @@ angular.module('toastio')
 
                 }, function(error) {
                     $log.error(error);
+
+                    $scope.saveState = 'failed';
+                    $scope.saveBtnText = 'See below for error details.';
+
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 2000);
+                    
                 });
 
                 return postRequest;

@@ -334,16 +334,16 @@ module.exports = function(grunt) {
         ngtemplates: {
             options: {
                 // This should be the name of your apps angular module
-                module: 'pivconpmpmgmtGuiApp',
-                htmlmin: {
-                    collapseBooleanAttributes: true,
-                    collapseWhitespace: true,
-                    removeAttributeQuotes: true,
-                    removeEmptyAttributes: true,
-                    removeRedundantAttributes: true,
-                    removeScriptTypeAttributes: true,
-                    removeStyleLinkTypeAttributes: true
-                },
+                module: 'toastio',
+                // htmlmin: {
+                //     collapseBooleanAttributes: true,
+                //     collapseWhitespace: true,
+                //     removeAttributeQuotes: true,
+                //     removeEmptyAttributes: true,
+                //     removeRedundantAttributes: true,
+                //     removeScriptTypeAttributes: true,
+                //     removeStyleLinkTypeAttributes: true
+                // },
                 usemin: 'app/app.js'
             },
             main: {
@@ -377,7 +377,9 @@ module.exports = function(grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'bower_components/**/*',
-                        'assets/images/{,*/}*.{webp}',
+                        'components/**/*',
+                        'lazy_components/**/*',
+                        'assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
                         'assets/fonts/**/*',
                         'client.html'
                     ]
@@ -618,7 +620,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= yeoman.client %>/app/app.scss': [
-                        '<%= yeoman.client %>/app/**/*.{scss,sass}',
+                        '<%= yeoman.client %>/{app, components}/**/*.{scss,sass}',
                         '!<%= yeoman.client %>/app/app.{scss,sass}'
                     ]
                 }

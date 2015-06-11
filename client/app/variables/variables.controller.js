@@ -1,9 +1,16 @@
+/* global async: true */
+
 'use strict';
 
 angular.module('toastio')
-    .controller('VariablesCtrl', function($scope, $state, $stateParams, Restangular, PopupSvc) {
+    .controller('VariablesCtrl', function($scope, $state, $timeout, $stateParams, Restangular, PopupSvc) {
 
         var _loadSettings = angular.noop;
+
+        var saveBtnText = 'Save';
+        $scope.saveBtnText = saveBtnText;
+        $scope.saveState = 'ready';
+
 
         function onSettingLoaded(settings) {
 
@@ -60,22 +67,56 @@ angular.module('toastio')
 
         $scope.submit = function() {
 
-            _.forEach($scope.settings, function(setting, index) {
+            var saveBtnText = 'Save';
+            $scope.saveBtnText = saveBtnText;
+            $scope.saveState = 'ready';
+
+            async.map($scope.settings, function(setting, interateCb) {
 
                 if (setting._id) {
                     setting.alias = setting.name.toLowerCase().replace(/\W/, '_');
                     setting.put().then(function(result) {
-                        $scope.settings[index] = result;
-                    });
+                        
+                        interateCb(null, result);
+
+                    }, interateCb);
                 } else {
                     var namevalComposite = (setting.name + setting.value).replace(/\s/g, '');
                     if (!_.isEmpty(namevalComposite)) {
                         setting.alias = setting.name.toLowerCase().replace(/\W/, '_');
                         Restangular.all('settings').post(setting).then(function(result) {
-                            $scope.settings[index] = result;
-                        });
+                            
+                            interateCb(null, result);
+
+                        }, interateCb);
                     }
                 }
+
+            }, function(err, settings) {
+
+                if (err) {
+
+                    $scope.saveState = 'failed';
+                    $scope.saveBtnText = 'See below for error details.';
+
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 2000);
+
+                } else {
+
+                    $scope.settings = settings;
+
+                    $scope.saveState = 'success';
+                    $scope.saveBtnText = 'Success!';
+
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 500);
+                }
+
 
             });
 

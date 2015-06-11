@@ -17,7 +17,18 @@ angular.module('toastio')
             .state('blocks.add', {
                 url: '/add/:parentid',
                 templateUrl: 'app/blocks/blocks-edit.html',
-                controller: 'BlocksEditCtrl'
+                controller: 'BlocksEditCtrl',
+                resolve: {
+                    loadPlugin: function($ocLazyLoad) {
+                        return $ocLazyLoad.load([{
+                            serie: true,
+                            files: ['lazy_components/codemirror/codemirror.css', 'lazy_components/codemirror/ambiance.css', 'lazy_components/codemirror/codemirror.js', 'lazy_components/codemirror/mode/javascript/javascript.js']
+                        }, {
+                            name: 'ui.codemirror',
+                            files: ['lazy_components/ui-codemirror/ui-codemirror.min.js']
+                        }]);
+                    }
+                }
             })
             .state('blocks.edit', {
                 url: '/edit/:blockid',

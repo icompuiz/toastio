@@ -17,7 +17,18 @@ angular.module('toastio')
             .state('templates.add', {
                 url: '/add/:parentid',
                 templateUrl: 'app/templates/templates-edit.html',
-                controller: 'TemplatesEditCtrl'
+                controller: 'TemplatesEditCtrl',
+                resolve: {
+                    loadPlugin: function($ocLazyLoad) {
+                        return $ocLazyLoad.load([{
+                            serie: true,
+                            files: ['lazy_components/codemirror/codemirror.css', 'lazy_components/codemirror/ambiance.css', 'lazy_components/codemirror/codemirror.js', 'lazy_components/codemirror/mode/javascript/javascript.js', 'lazy_components/codemirror/mode/jade/jade.js']
+                        }, {
+                            name: 'ui.codemirror',
+                            files: ['lazy_components/ui-codemirror/ui-codemirror.min.js']
+                        }]);
+                    }
+                }
             })
             .state('templates.edit', {
                 url: '/edit/:templateid',
@@ -27,7 +38,7 @@ angular.module('toastio')
                     loadPlugin: function($ocLazyLoad) {
                         return $ocLazyLoad.load([{
                             serie: true,
-                            files: ['lazy_components/codemirror/codemirror.css', 'lazy_components/codemirror/ambiance.css', 'lazy_components/codemirror/codemirror.js', 'lazy_components/codemirror/mode/javascript/javascript.js']
+                            files: ['lazy_components/codemirror/codemirror.css', 'lazy_components/codemirror/ambiance.css', 'lazy_components/codemirror/codemirror.js', 'lazy_components/codemirror/mode/javascript/javascript.js', 'lazy_components/codemirror/mode/jade/jade.js']
                         }, {
                             name: 'ui.codemirror',
                             files: ['lazy_components/ui-codemirror/ui-codemirror.min.js']

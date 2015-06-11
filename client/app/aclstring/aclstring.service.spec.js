@@ -3,7 +3,7 @@
 describe('Service: aclstring', function () {
 
   // load the service's module
-  beforeEach(module('pivconpmpmgmtGuiApp'));
+  beforeEach(module('toastio'));
 
   // instantiate service
   var aclstring;

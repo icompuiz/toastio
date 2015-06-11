@@ -12,11 +12,12 @@ angular.module('toastio')
             var groupedItems = _.groupBy($scope.formdata.items, '_class');
 
             $scope.formdata.folders = groupedItems.FileSystemDirectory;
-            $scope.formdata.files = (groupedItems.FileSystemFile || []).concat(groupedItems.FileSystemImageFile || []).concat(groupedItems.FileSystemZipFile || []);
+            $scope.formdata.files = (groupedItems.FileSystemFile || []).concat(groupedItems.FileSystemImageFile || []).concat(groupedItems.FileSystemZipFile || []).concat(groupedItems.FileSystemTextFile || []);
 
             $scope.formdata.files = _.map($scope.formdata.files, function(d) {
                 d.isImage = d.type.match(/^image/) && !d.type.match(/svg/);
                 d.isZip = d.type.match('zip');
+                d.isText = d.type.match('text') || d.type.match('javascript');
                 return d;
             });
 

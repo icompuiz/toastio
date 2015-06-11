@@ -78,7 +78,7 @@ angular.module('toastio')
 
 
     })
-    .controller('TypesEditCtrl', function($scope, $state, $stateParams, $log, Restangular) {
+    .controller('TypesEditCtrl', function($scope, $state, $timeout, $stateParams, $log, Restangular) {
 
         var _loadType = angular.noop;
 
@@ -137,11 +137,18 @@ angular.module('toastio')
 
         $scope.alias = '';
 
+        var saveBtnText = 'Save';
+        $scope.saveBtnText = saveBtnText;
+        $scope.saveState = 'ready';
+
         $scope.submit = function() {
 
             if ($scope.formdata.alias) {
                 $scope.formdata.alias.trim();
             }
+
+            $scope.saveBtnText = 'Submitting...';
+            $scope.saveState = 'waiting';
 
             if ($scope.formdata._id) {
 
@@ -154,6 +161,28 @@ angular.module('toastio')
 
 
                 var putRequest = formdata.put();
+
+                putRequest.then(function() {
+
+                    $scope.saveState = 'success';
+                    $scope.saveBtnText = 'Success!';
+
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 500);
+
+                }, function() {
+
+                    $scope.saveState = 'failed';
+                    $scope.saveBtnText = 'See below for error details.';
+
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 2000);
+
+                });
 
                 return putRequest;
 
@@ -170,6 +199,14 @@ angular.module('toastio')
 
                 }, function(error) {
                     $log.error(error);
+                    
+                    $scope.saveState = 'failed';
+                    $scope.saveBtnText = 'See below for error details.';
+
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 2000);
                 });
 
                 return postRequest;

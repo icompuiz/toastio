@@ -3,9 +3,17 @@
 var mongoose = require('mongoose'),
     vm = require('vm'),
     async = require('async'),
+    lodash = require('lodash'),
     jade = require('jade');
 
 var components = require('../../components');
+
+var utils = {
+    _: lodash,
+    lodash: lodash,
+    async: async,
+    jade: jade
+};
 
 require('mongoose-schema-extend');
 
@@ -22,7 +30,7 @@ var ScriptSchema = components.model.schema.extend({
     }
 });
 
-ScriptSchema.methods.execute = function(content, callback) {
+ScriptSchema.methods.execute = function(document, callback) {
 
     var script = this;
 
@@ -34,7 +42,7 @@ ScriptSchema.methods.execute = function(content, callback) {
         stopTimer();
     }
 
-    function sendOutput(err, outputContent) {
+    function sendOutput(err, outputDocument) {
 
         var output = {
             name: script.name,
@@ -42,10 +50,10 @@ ScriptSchema.methods.execute = function(content, callback) {
         };
 
         if (err) {
-            output.content = err.toString();
+            output.html = err.toString();
             output.err = true;
         } else {
-            output.content = outputContent;
+            output.html = outputDocument;
         }
 
         if (!callbackInvoked) {
@@ -63,7 +71,8 @@ ScriptSchema.methods.execute = function(content, callback) {
             if (err) {
                 callback(err);
             } else if (block) {
-                var asObject = block.toObject();
+                
+                var asObject = lodash.toPlainObject(block);
 
                 asObject.compile = function(data) {
                     return block.compile(data);
@@ -84,8 +93,8 @@ ScriptSchema.methods.execute = function(content, callback) {
             if (err) {
                 callback(err);
             } else if (script) {
-                var asObject = script.toObject();
-
+                
+                var asObject = lodash.toPlainObject(script);
                 asObject.execute = function() {
                     script.execute.apply(script, arguments);
                 };
@@ -98,25 +107,48 @@ ScriptSchema.methods.execute = function(content, callback) {
 
     }
 
-    function findContent(conditions, callback) {
-        var Content = mongoose.model('Content');
+    function findDocument(conditions,  arg1, arg2) {
+
+        var options = {};
+        var callback = function() {};
+        if (lodash.isFunction(arg1)) {
+            callback = arg1;
+        } else if (lodash.isObject(arg1)) {
+            options = arg1;
+            callback = arg2;
+        }
+
+        var Document = mongoose.model('Document');
 
         function mappingFn(doc, callback) {
-        	var asObject = doc.toObject();
-        	doc.getPath(function(err, path) {
-        		asObject.path = path;
-        		callback(err, asObject);
-        	});
+            var asObject = lodash.toPlainObject(doc);
+
+            doc.getPath(function(err, path) {
+                asObject.path = path;
+                callback(err, asObject);
+            });
         }
 
 
-        Content.find(conditions, function(err, docs) {
+        var query = Document.find(conditions);
+
+        if (options.populate) {
+            if (!lodash.isArray(options.populate)) {
+                options.populate = [options.populate];
+            }
+        }
+
+        lodash.forEach(options.populate, function(populateConfig) {
+            query.populate(populateConfig);
+        });
+
+        query.exec(function(err, docs) {
             if (err) {
                 callback(err);
             } else if (docs.length) {
 
                 if (docs.length === 1) {
-                    mappingFn(docs, callback);
+                    mappingFn(docs[0], callback);
                 } else {
                     async.map(docs, mappingFn, callback);
                 }
@@ -143,14 +175,14 @@ ScriptSchema.methods.execute = function(content, callback) {
     var sandbox = {
         '$start': initialize,
         '$end': sendOutput,
-        '$content': content,
+        '$document': document,
         '$script': script,
         '$options': script.tag.options,
         '$console': console,
         '$Script': findScript,
-        '$Content': findContent,
+        '$Document': findDocument,
         '$Blocks': compileBlock,
-        '$jade': jade
+        '$utils': utils
     };
 
 

@@ -25,6 +25,12 @@ angular.module('toastio')
                             files: ['lazy_components/chosen/chosen.css', 'lazy_components/chosen/chosen.jquery.js', 'lazy_components/chosen/chosen.js']
                         },{
                             files: ['lazy_components/iCheck/css/custom.css','lazy_components/iCheck/icheck.min.js']
+                        },{
+                            serie: true,
+                            files: ['lazy_components/codemirror/codemirror.css', 'lazy_components/codemirror/ambiance.css', 'lazy_components/codemirror/codemirror.js', 'lazy_components/codemirror/mode/javascript/javascript.js', 'lazy_components/codemirror/mode/jade/jade.js']
+                        }, {
+                            name: 'ui.codemirror',
+                            files: ['lazy_components/ui-codemirror/ui-codemirror.min.js']
                         }]);
                     }
                 }
@@ -40,6 +46,12 @@ angular.module('toastio')
                             files: ['lazy_components/chosen/chosen.css', 'lazy_components/chosen/chosen.jquery.js', 'lazy_components/chosen/chosen.js']
                         },{
                             files: ['lazy_components/iCheck/css/custom.css','lazy_components/iCheck/icheck.min.js']
+                        },{
+                            serie: true,
+                            files: ['lazy_components/codemirror/codemirror.css', 'lazy_components/codemirror/ambiance.css', 'lazy_components/codemirror/codemirror.js', 'lazy_components/codemirror/mode/javascript/javascript.js', 'lazy_components/codemirror/mode/jade/jade.js']
+                        }, {
+                            name: 'ui.codemirror',
+                            files: ['lazy_components/ui-codemirror/ui-codemirror.min.js']
                         }]);
                     }
                 }

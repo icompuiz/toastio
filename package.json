@@ -28,7 +28,7 @@
     "mongoose-validator": "^1.0.3",
     "morgan": "~1.0.0",
     "node-7z": "^0.3.0",
-    "node-restful": "^0.1.17",
+    "node-restful": "https://github.com/icompuiz/node-restful/archive/v0.0.0.tar.gz",
     "optimist": "^0.6.1",
     "passport": "^0.2.1",
     "passport-local-mongoose": "^1.0.0",

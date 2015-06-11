@@ -48,7 +48,7 @@ angular.module('toastio')
         _loadUser();
 
     })
-    .controller('UsersEditCtrl', function($scope, $state, $stateParams, $log, Restangular) {
+    .controller('UsersEditCtrl', function($scope, $state, $timeout, $stateParams, $log, Restangular) {
 
         var _loadUser = angular.noop;
 
@@ -70,13 +70,42 @@ angular.module('toastio')
 
         $scope.formdata = {};
 
+        var saveBtnText = 'Save';
+        $scope.saveBtnText = saveBtnText;
+        $scope.saveState = 'ready';
+
         $scope.submit = function() {
+
+            $scope.saveBtnText = 'Submitting...';
+            $scope.saveState = 'waiting';
 
             if ($scope.formdata._id) {
 
                 var formdata = $scope.formdata.clone();
 
                 var putRequest = formdata.put();
+
+                putRequest.then(function() {
+
+                    $scope.saveState = 'success';
+                    $scope.saveBtnText = 'Success!';
+
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 500);
+
+                }, function() {
+
+                    $scope.saveState = 'failed';
+                    $scope.saveBtnText = 'See below for error details.';
+
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 2000);
+
+                });
 
                 return putRequest;
 
@@ -97,6 +126,14 @@ angular.module('toastio')
 
                 }, function(error) {
                     $log.error(error);
+
+                    $scope.saveState = 'failed';
+                    $scope.saveBtnText = 'See below for error details.';
+                    
+                    $timeout(function() {
+                        $scope.saveState = 'ready';
+                        $scope.saveBtnText = saveBtnText;
+                    }, 2000);
                 });
 
                 return postRequest;

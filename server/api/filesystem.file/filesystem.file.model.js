@@ -198,6 +198,40 @@ var download = function(fileId, sendStream) {
 
 };
 
+var writeFile = function(fileId, buffer, writeFileCb) {
+
+    function onWriteBuffer(err, fileStream) {
+        if (err) {
+            console.log('model::file::writeFile::statics::onWriteBuffer::err')
+            return writeFileCb(err);
+        }
+
+        // close the stream to flush to db
+        fileStream.close(writeFileCb);
+    }
+
+    function onFileOpen(err, fileStream) {
+        if (err) {
+
+            console.log('model::file::writeFile::statics::onFileOpen::err');
+            return writeFileCb(err);
+        }
+
+        console.log('model::file::writeFile::statics::onFileOpen::success', 'writing file');
+
+        return fileStream.write(buffer, onWriteBuffer);
+
+    }
+
+
+    var gridStore = new GridStore(mongoose.connection.db, fileId, 'w', {
+        root: prefix
+    });
+
+    gridStore.open(onFileOpen);
+
+}
+
 var deleteFile = function(fileId, doneDeletingFile) {
 
     function doDelete(fileStream) {
@@ -240,6 +274,7 @@ FileSystemFileSchema.statics.fileName = fileName;
 FileSystemFileSchema.statics.copyStream = copyStream;
 
 FileSystemFileSchema.statics.download = download;
+FileSystemFileSchema.statics.write = writeFile;
 
 FileSystemFileSchema.statics.delete = deleteFile;
 
@@ -308,6 +343,14 @@ FileSystemFileSchema.methods.copyFile = function(tmpData, doneCopyingFile, remov
     }
 
     copyFile(tmpData, onFileCopied, removeFile);
+
+};
+
+FileSystemFileSchema.methods.write = function(newText, writeCb) {
+
+    var buffer = new Buffer(newText, 'utf-8');
+
+    writeFile(this.fileId, buffer, writeCb);
 
 };
 
@@ -436,7 +479,7 @@ FileSystemFileSchema.statics.findByPath = function(path, findByPathTaskDone) {
         };
 
         console.log(rootConditions);
-        
+
         getNextNode(rootConditions, function(err, finalNode) {
             if (err) {
                 findByPathTaskDone(err);

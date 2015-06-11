@@ -102,6 +102,7 @@
 											i.fa.fa-chevron-down
 										ul.dropdown-menu.animated.fadeInRight
 											li
+												a(ui-sref="files.textfiles.edit({ fileid: file._id })", ng-if="file.isText") Edit File
 												a(ng-click="extract(file)", ng-if="file.isZip") Extract Here
 												a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}") Download
 												a(ng-click="deleteFile(file)") Delete

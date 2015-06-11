@@ -244,7 +244,7 @@ function linkScripts(template, content, callback) {
 
         _.forEach(results, function(tag) {
             console.log(tag);
-            template = template.replace(tag.raw, tag.content || '');
+            template = template.replace(tag.raw, tag.html || '');
 
         });
 
@@ -361,12 +361,14 @@ function getTemplate(content, req, res) {
 
                                 if (!_.isFunction(compilerOrError)) {
                                     accumulatorText = compilerOrError.message;
+                                    sync = false;
+                                } else {
+                                    compilerOrError(content, function(err, html) {
+                                        currentNode.text = currentNode.text.replace(regex, html) || '';
+                                        sync = false;
+                                    });
                                 }
 
-                                compilerOrError(content, function(err, html) {
-                                    sync = false;
-                                    currentNode.text = currentNode.text.replace(regex, html) || '';
-                                });
 
                                 // THIS IS A HACK
                                 // blocking wait until template is compiled into html
