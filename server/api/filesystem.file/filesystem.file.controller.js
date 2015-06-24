@@ -291,14 +291,14 @@ exports.downloadFile = downloadFile = function downloadFile(req, res, noCache) {
 
             console.log('controller::file::handleFileDownload::findById::download::sucess', 'Sending stream');
 
-            var type = fileStream.contentType;
+            var type = file.type;
             res.header('Content-Type', type);
             if (false === noCache) {
                 res.header('Expires', incrementDate(new Date(), 10)); // Caching
                 res.header('Last-Modified', file.modified.toGMTString()); // Caching
             }
 
-            res.header('Content-Disposition', 'filename="' + path.basename(fileStream.filename) + '"');
+            res.header('Content-Disposition', 'filename="' + path.basename(file.name) + '"');
 
             var stream = fileStream.stream(true);
             if (file.downloadsRemaining !== -1) {

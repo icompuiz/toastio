@@ -288,8 +288,39 @@ function getFileByPath(req, res) {
             return components.errors[404](req, res);
         }
 
-        req.params.id = fileDoc._id;
-        FileSystemFileCtrl.downloadFile(req, res);
+        if ('FileSystemDirectory' === fileDoc._class) {
+
+
+            fileDoc.populate('items', function(err, directoryDoc) {
+
+                if (err) {
+                    return res.status(500).send(err);
+                }
+
+                var items = directoryDoc.items.map(function(d) {
+
+                    var item = {
+                        _id: d._id, 
+                        name: d.name, 
+                        url: [req.path, d.name].join('/')
+                    };
+
+                    return item;
+
+                });
+
+                return res.json(items);
+
+
+            });
+
+        } else {
+
+            req.params.id = fileDoc._id;
+            FileSystemFileCtrl.downloadFile(req, res);
+
+        }
+
 
     }
 
