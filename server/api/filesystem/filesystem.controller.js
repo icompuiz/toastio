@@ -302,6 +302,7 @@ function getFileByPath(req, res) {
                     var item = {
                         _id: d._id, 
                         name: d.name, 
+                        type: d._class,
                         url: [req.path, d.name].join('/')
                     };
 

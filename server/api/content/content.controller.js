@@ -15,11 +15,11 @@ var regex = {
     single: /\{{2}=([a-zA-Z0-9_\$-]+)\}{2}([\W\w]+)\{{2}\1=\}{2}/
 };
 
-function extractPropertyTags(template) {
+function pluckDocumentPropertyTags(template) {
 
-    var parsed = template.match(/\{\{[^(+|=|~)][^}]*[^(=|+|~)]\}\}/g) || [];
+    var documentPropertyTags = template.match(/\{\{[^(+|=|~)][^}]*[^(=|+|~)]\}\}/g) || [];
 
-    parsed = parsed
+    documentPropertyTags = _(documentPropertyTags)
         .map(function(tag) {
             return tag.replace(/(^\{\{)|(\}\}$)/g, '');
         })
@@ -29,43 +29,47 @@ function extractPropertyTags(template) {
                 return null;
             }
 
-            var outputConfig = tag.split(':');
+            var tagConfig = tag.split(':');
 
-            if (outputConfig.length === 1) {
-                outputConfig.push('text');
-            } else if (outputConfig.length === 0) {
+            if (tagConfig.length === 1) {
+                tagConfig.push('text');
+            } else if (tagConfig.length === 0) {
                 return null;
             }
 
-            var property = outputConfig[0];
+            var property = tagConfig[0];
 
-            var format = outputConfig[1];
+            var format = tagConfig[1];
 
-            var options = outputConfig.splice(2);
+            var options = tagConfig.splice(2);
 
-            outputConfig = {
+            tagConfig = {
                 property: property,
                 format: format,
                 options: options,
                 raw: ['{{', tag, '}}'].join('')
             };
 
-            return outputConfig;
+            return tagConfig;
         })
-        .filter(function(tag) {
-            return tag !== null;
-        });
+        .compact()
+        .value();
 
 
-    return parsed;
+    return documentPropertyTags;
 
 }
 
-function extractScriptTags(template) {
+/**
+ * getScriptTags
+ * @param - template<string> The raw HTML content to be parsed
+ * @returns - a list of script tags included in the template
+ */
+function getScriptTags(template) {
 
-    var parsed = template.match(/\{{2}~[^\{.]*\}{2}/g) || [];
+    var scriptTags = template.match(/\{{2}~[^\{.]*\}{2}/g) || [];
 
-    parsed = parsed
+    scriptTags = _(scriptTags)
         .map(function(tag) {
             return tag.replace(/(^\{{2}~)|(\}{2}|$)/g, '');
         })
@@ -74,29 +78,28 @@ function extractScriptTags(template) {
                 return null;
             }
 
-            var outputConfig = tag.split(':');
+            var tagConfig = tag.split(':');
 
-            if (outputConfig.length === 0) {
+            if (tagConfig.length === 0) {
                 return null;
             }
 
-            var options = outputConfig.splice(1);
+            var options = tagConfig.splice(1);
 
             var name = tag;
             if (options.length) {
                 name = name.replace(':' + options, '');
 
-
                 options = options.shift().split(',');
 
-                var mapped = options.map(function(part) {
-                    var parts1 = part.split('=');
+                var mapped = options.map(function(option) {
+                    var factors = option.split('=');
                     var option = {
-                        name: parts1[0],
+                        name: factors[0],
                         value: true
                     };
-                    if (parts1[1]) {
-                        option.value = parts1[1];
+                    if (factors[1]) {
+                        option.value = factors[1];
                     }
 
                     return option;
@@ -108,37 +111,42 @@ function extractScriptTags(template) {
                 });
             }
 
-            outputConfig = {
+            tagConfig = {
                 name: name,
                 options: options,
                 raw: ['{{~', tag, '}}'].join('')
             };
 
-            return outputConfig;
+            return tagConfig;
         })
-        .filter(function(tag) {
-            return tag !== null;
-        });
+        .compact()
+        .value();
 
 
-
-
-    return parsed;
-
+    return scriptTags;
 }
 
-function linkProperties(template, content, callback) {
+/**
+ * injectDocumentProperties
+ * @param template<string> - An HTML string with 0..* property tags
+ * @param document<Document> - A document object from which property tag values will be
+ * pulled from 
+ * @async Passes the HTML template with property tags replaced by the property value
+ * for the current document
+ */
 
-    var tags = extractPropertyTags(template);
+function injectDocumentProperties(template, document, injectDocumentPropertiesCb) {
+
+    var tags = pluckDocumentPropertyTags(template);
 
     var Setting = mongoose.model('Setting');
 
-    function getSettings(forwardSettings) {
+    function getSettings(getSettingsCb) {
         var siteSettings = [];
 
         Setting.find({}).exec(function(err, settings) {
             if (err) {
-                return forwardSettings(err);
+                return getSettingsCb(err);
             }
 
             _.forEach(settings, function(setting) {
@@ -148,25 +156,25 @@ function linkProperties(template, content, callback) {
                 });
             });
 
-            return forwardSettings(null, siteSettings);
+            return getSettingsCb(null, siteSettings);
         });
 
     }
 
     function link(siteSettings, doneLinking) {
 
-        content.properties = content.properties.concat([{
+        document.properties = document.properties.concat([{
             name: '$name',
-            value: content.name
+            value: document.name
         }, {
             name: '$created',
-            value: content.created
+            value: document.created
         }, {
             name: '$modified',
-            value: content.modified
+            value: document.modified
         }]).concat(siteSettings);
 
-        var properties = content.properties;
+        var properties = document.properties;
 
         var tagOutput = _.map(tags, function(tag) {
 
@@ -210,16 +218,29 @@ function linkProperties(template, content, callback) {
 
 
     async.waterfall([getSettings, link], function(err, template) {
-        callback(null, template);
+        injectDocumentPropertiesCb(null, template);
     });
 
 
 }
 
+/**
+ * injectScripts
+ * @param template<string> - An HTML string with 0..* script tags
+ * @param document<Document> - A document object to pass into the script's
+ * execution context
+ * @async Passes the HTML template with script tags replaced 
+ * by the result of executing that script
+ */
 
-function linkScripts(template, content, callback) {
+function injectScripts(template, document, httpRequest, httpResponse, injectScriptsCb) {
 
-    var tags = extractScriptTags(template, content);
+/**
+ * getScriptTags
+ * @param - template: The raw HTML content to be parsed
+ * @returns - a list of script tags included in the template
+ */
+    var tags = getScriptTags(template, document);
 
     var Script = mongoose.model('Script');
     async.map(tags, function(tag, mapNextTag) {
@@ -233,7 +254,7 @@ function linkScripts(template, content, callback) {
                 mapNextTag();
             } else {
                 script.tag = tag;
-                script.execute(content, mapNextTag);
+                script.execute(document, httpRequest, httpResponse, mapNextTag);
             }
         });
 
@@ -243,35 +264,41 @@ function linkScripts(template, content, callback) {
         });
 
         _.forEach(results, function(tag) {
-            console.log(tag);
             template = template.replace(tag.raw, tag.html || '');
 
         });
 
-        callback(null, template);
+        injectScriptsCb(null, template);
     });
 
 }
 
-function compileTemplate(template) {
+/**
+ * compileTemplate
+ * @param template<string> - the raw template content
+ * @return a projection function that will link properties and scripts 
+ * Will compile a valid jade file into HTML and return a projection function 
+ * with that compiled template available in the closure
+ */
 
-    // console.log(template);
-
-    // if () {} // for example if the template is in another format like jade
+function compileTemplate(template, isJadeTemplate) {
 
     try {
 
-        var jade = require('jade');
+        if (isJadeTemplate) {
+            var jade = require('jade');
 
-        var templateFunction = jade.compile(template);
+            var templateFunction = jade.compile(template);
 
-        template = templateFunction({});
+            template = templateFunction({}); // <- provide some locals for this projection
+        }
 
-        return function(content, callback) {
 
-            linkProperties(template, content, function(err, compiledTemplate) {
+        return function(content, httpRequest, httpResponse, callback) {
 
-                linkScripts(compiledTemplate, content, callback);
+            injectDocumentProperties(template, content, function(err, compiledTemplate) {
+
+                injectScripts(compiledTemplate, content, httpRequest, httpResponse, callback);
 
             });
 
@@ -285,24 +312,36 @@ function compileTemplate(template) {
 
 }
 
-function getTemplate(content, req, res) {
+/**
+ * getTemplate
+ * @param content<DocumentModel> - the fully formed Document resource
+ * @param req<object> - the express request handle
+ * @param res<object> - the express response handle
+ * @async - Will invoke res.send to resolve the request or res.error to
+ * identify and error has occured.
+ * Will compile a Document's template if the document is associated with a type
+ * If not associated with a type, respond with an error.
+ * If Document's type does not have a template, respond with a blank html document
+ */
+
+function getTemplate(document, req, res) {
     var Type = mongoose.model('Type');
     var Template = mongoose.model('Template');
 
     // first get the path to this template
-    content.getPath(function(err, path) {
-        content.path = path;
+    document.getPath(function(err, path) {
+        document.path = path;
 
-        // populte the content's type
-        Type.populate(content.type, {
+        // populte the document's type
+        Type.populate(document.type, {
             path: 'template'
-        }, function(err, contentType) {
+        }, function(err, documentType) {
 
             if (err) {
 
                 return components.errors[400](req, res, err);
 
-            } else if (!contentType) {
+            } else if (!documentType) {
 
                 return components.errors[400](req, res, 'A type must be specified for all items');
 
@@ -310,9 +349,12 @@ function getTemplate(content, req, res) {
             } else {
 
                 // populate the tree stack and compose blocks
-                var template = new Template(contentType.template);
+                var template = new Template(documentType.template);
+                var isJadeTemplate = /\.jade$/.test(template.name);
+
 
                 template.getTreeStack(function(err, stack) {
+
 
                     function processMatch(match) {
                         var parts = match.match(regex.single);
@@ -363,7 +405,7 @@ function getTemplate(content, req, res) {
                                     accumulatorText = compilerOrError.message;
                                     sync = false;
                                 } else {
-                                    compilerOrError(content, function(err, html) {
+                                    compilerOrError(document, req, res, function(err, html) {
                                         currentNode.text = currentNode.text.replace(regex, html) || '';
                                         sync = false;
                                     });
@@ -404,15 +446,32 @@ function getTemplate(content, req, res) {
                     if (stack && stack.length) {
 
                         findBlocks(stack, null, function(err, text) {
-                            var compilerOrError = compileTemplate(text);
+
+                            if (isJadeTemplate) {
+                                console.log('Rendering a jade template');
+                            }
+                            var compilerOrError = compileTemplate(text, isJadeTemplate);
 
                             if (!_.isFunction(compilerOrError)) {
                                 console.error(compilerOrError);
                                 return components.errors[400](req, res, JSON.stringify(compilerOrError.message));
                             }
 
-                            compilerOrError(content, function(err, html) {
-                                res.send(200, html);
+
+
+                            compilerOrError(document, req, res, function(err, html) {
+                                var properties = _.indexBy(document.properties, 'name');
+                                var result = html;
+                                try {
+                                    result = JSON.parse(html);
+                                    properties.contentType = {
+                                        value: 'application/json'
+                                    };
+                                    res.json(JSON.parse(html));
+                                } catch (e) {
+                                    console.log('Could not parse result as JSON, sending plain html');
+                                    res.send(html);
+                                }
                             });
                         });
 
@@ -432,54 +491,73 @@ function getTemplate(content, req, res) {
     });
 }
 
+/**
+ * getTemplateById
+ * @param req<object> - the express request handle
+ * @param res<object> - the express response handle
+ * @async - Dispatches responsibility for sending response to getTemplate
+ * Using the documentId url parameter (as parsed by express) find a document
+ * resource and generate the related HTML template
+ */
+
 function getTemplateById(req, res) {
 
-    var contentId = req.params.contentId;
+    var documentId = req.params.documentId;
 
     var Document = mongoose.model('Document');
 
-    var contentQuery = Document.findById(contentId);
+    var documentQuery = Document.findById(documentId);
 
-    contentQuery.populate('type');
+    documentQuery.populate('type');
 
-    contentQuery.exec(function(err, content) {
+    documentQuery.exec(function(err, queryresult) {
 
 
 
-        if (err || !content) {
+        if (err || !queryresult) {
 
             return components.errors[404](req, res);
 
         }
 
-        getTemplate(content, req, res);
+        getTemplate(queryresult, req, res);
 
     });
 
 }
 
+/**
+ * getTemplateByPath
+ * @param req<object> - the express request handle
+ * @param res<object> - the express response handle
+ * @async - Dispatches responsibility for sending response to getTemplateById
+ * Parse the not prefix portion of the url to identify the Document path 
+ * Document path is identified as the concatination of all parent aliases with 
+ * and the current document's alias
+ */
+
 function getTemplateByPath(req, res) {
 
-    var contentPath = req.url;
+    var documentPath = req.url;
 
     var Document = mongoose.model('Document');
 
-    function getTemplate(err, content) {
+    function getTemplate(err, document) {
         if (err) {
             return components.errors[404](req, res);
         } else {
 
-            req.params.contentId = content;
+            req.params.documentId = document;
             getTemplateById(req, res);
         }
     }
 
-    if (contentPath === '/') {
+    if (documentPath === '/') {
         Document.findOne({
             isHomePage: true
         }).exec(getTemplate);
     } else {
-        Document.findByPath(contentPath, getTemplate);
+        Document.findByPath(documentPath, getTemplate);
     }
 
 

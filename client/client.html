@@ -14,10 +14,10 @@
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="shortcut icon" href="assets/images/toastycms-icon.png">
-	
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 	<!-- build:css(client) app/vendor.css -->
 	<!-- bower:css -->
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
 	<!-- endbower -->
 	<!-- endbuild -->
 	<!-- build:css({.tmp,client}) app/app.css -->
@@ -28,101 +28,100 @@
 	<link rel="stylesheet" href="components/inspina/css/style.min.css">
 	<link rel="stylesheet" href="components/jquery-ui/jquery-ui.min.css">
 	<!-- endbuild -->
-
 	<!-- Need to specify the relative path to ckeditor configuration files -->
 	<script language="javascript">
-		window.CKEDITOR_BASEPATH = '/bower_components/ckeditor/';
+	window.CKEDITOR_BASEPATH = '/bower_components/ckeditor/';
 	</script>
-
 </head>
 
 <body ng-controller="MainCtrl as main" class="fullheight">
 	<!--[if lt IE 7]>
 		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 	<![endif]-->
-
 	<!-- Add your site or application content here -->
 	<div ui-view="" class="fullheight"></div>
-
 	<!--[if lt IE 9]>
 	<script src="bower_components/es5-shim/es5-shim.js"></script>
 	<script src="bower_components/json3/lib/json3.min.js"></script>
 	<![endif]-->
 	<!-- build:js({client,node_modules}) app/vendor.js -->
-		<!-- bower:js -->
-		<script src="bower_components/jquery/dist/jquery.js"></script>
-		<script src="bower_components/angular/angular.js"></script>
-		<script src="bower_components/angular-resource/angular-resource.js"></script>
-		<script src="bower_components/angular-cookies/angular-cookies.js"></script>
-		<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-		<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-		<script src="bower_components/lodash/dist/lodash.compat.js"></script>
-		<script src="bower_components/angular-socket-io/socket.js"></script>
-		<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-		<script src="bower_components/restangular/dist/restangular.js"></script>
-		<script src="bower_components/ocLazyLoad/dist/ocLazyLoad.min.js"></script>
-		<script src="bower_components/ng-ckeditor/ng-ckeditor.js"></script>
-		<script src="bower_components/ckeditor/ckeditor.js"></script>
-		<script src="bower_components/angular-hotkeys/angular-hotkeys.js"></script>
-		<script src="bower_components/angular-hotkeys/angular-hotkeys.min.js"></script>
-		<script src="bower_components/async/lib/async.js"></script>
-		<!-- endbower -->
+	<!-- bower:js -->
+	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="bower_components/angular-resource/angular-resource.js"></script>
+	<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+	<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+	<script src="bower_components/lodash/lodash.js"></script>
+	<script src="bower_components/angular-socket-io/socket.js"></script>
+	<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+	<script src="bower_components/restangular/dist/restangular.js"></script>
+	<script src="bower_components/ocLazyLoad/dist/ocLazyLoad.min.js"></script>
+	<script src="bower_components/ng-ckeditor/ng-ckeditor.js"></script>
+	<script src="bower_components/ckeditor/ckeditor.js"></script>
+	<script src="bower_components/angular-hotkeys/angular-hotkeys.js"></script>
+	<script src="bower_components/angular-hotkeys/angular-hotkeys.min.js"></script>
+	<script src="bower_components/async/lib/async.js"></script>
+	<!-- endbower -->
 	<!-- endbuild -->
 	<!-- build:js({.tmp,client}) app/app.js -->
 	<script src="app/app.js"></script>
-		<!-- injector:js -->
-		<script src="app/aclstring/aclstring.service.js"></script>
-		<script src="app/authentication/authentication.service.js"></script>
-		<script src="app/blocks/blocks.controller.js"></script>
-		<script src="app/blocks/blocks.js"></script>
-		<script src="app/content/content.controller.js"></script>
-		<script src="app/content/content.js"></script>
-		<script src="app/documents/document-property/document-property-input.directive.js"></script>
-		<script src="app/documents/document-property/input-date/input-date.js"></script>
-		<script src="app/documents/document-property/input-daterange/input-daterange.js"></script>
-		<script src="app/documents/document-property/input-image/input-image.js"></script>
-		<script src="app/documents/document-property/input-jade/input-jade.js"></script>
-		<script src="app/documents/document-property/input-js/input-js.js"></script>
-		<script src="app/documents/document-property/input-richtext/input-richtext.js"></script>
-		<script src="app/documents/document-property/input-text/input-text.js"></script>
-		<script src="app/documents/document-property/input-textarea/input-textarea.js"></script>
-		<script src="app/documents/documents.controller.js"></script>
-		<script src="app/documents/documents.js"></script>
-		<script src="app/files/files.js"></script>
-		<script src="app/files/textfiles/textfiles.controller.js"></script>
-		<script src="app/hk-ctrl-s/hk-ctrl-s.directive.js"></script>
-		<script src="app/login/center-element.directive.js"></script>
-		<script src="app/login/login.controller.js"></script>
-		<script src="app/login/login.js"></script>
-		<script src="app/login/logout-button.directive.js"></script>
-		<script src="app/main/main.controller.js"></script>
-		<script src="app/main/main.js"></script>
-		<script src="app/media/file/file.controller.js"></script>
-		<script src="app/media/file/file.js"></script>
-		<script src="app/media/folder/folder.controller.js"></script>
-		<script src="app/media/folder/folder.js"></script>
-		<script src="app/media/media.controller.js"></script>
-		<script src="app/media/media.js"></script>
-		<script src="app/modal/modal.service.js"></script>
-		<script src="app/navbar/navbar.controller.js"></script>
-		<script src="app/popup/popup-alert.controller.js"></script>
-		<script src="app/popup/popup-prompt.controller.js"></script>
-		<script src="app/popup/popup.service.js"></script>
-		<script src="app/scripts/scripts.controller.js"></script>
-		<script src="app/scripts/scripts.js"></script>
-		<script src="app/search/search.controller.js"></script>
-		<script src="app/search/search.js"></script>
-		<script src="app/settings/settings.js"></script>
-		<script src="app/templates/templates.controller.js"></script>
-		<script src="app/templates/templates.js"></script>
-		<script src="app/types/types.controller.js"></script>
-		<script src="app/types/types.js"></script>
-		<script src="app/userSession/userSession.service.js"></script>
-		<script src="app/users/users.controller.js"></script>
-		<script src="app/users/users.js"></script>
-		<script src="app/variables/variables.controller.js"></script>
-		<script src="app/variables/variables.js"></script>
-		<!-- endinjector -->
+	<!-- injector:js -->
+	<script src="app/aclstring/aclstring.service.js"></script>
+	<script src="app/authentication/authentication.service.js"></script>
+	<script src="app/blocks/blocks.controller.js"></script>
+	<script src="app/blocks/blocks.js"></script>
+	<script src="app/content/content.controller.js"></script>
+	<script src="app/content/content.js"></script>
+	<script src="app/documents/document-property/document-property-input.directive.js"></script>
+	<script src="app/documents/document-property/input-date/input-date.js"></script>
+	<script src="app/documents/document-property/input-daterange/input-daterange.js"></script>
+	<script src="app/documents/document-property/input-image/input-image.js"></script>
+	<script src="app/documents/document-property/input-jade/input-jade.js"></script>
+	<script src="app/documents/document-property/input-js/input-js.js"></script>
+	<script src="app/documents/document-property/input-richtext/input-richtext.js"></script>
+	<script src="app/documents/document-property/input-text/input-text.js"></script>
+	<script src="app/documents/document-property/input-textarea/input-textarea.js"></script>
+	<script src="app/documents/documents.controller.js"></script>
+	<script src="app/documents/documents.js"></script>
+	<script src="app/files/files.js"></script>
+	<script src="app/files/textfiles/textfiles.controller.js"></script>
+	<script src="app/hk-ctrl-s/hk-ctrl-s.directive.js"></script>
+	<script src="app/login/center-element.directive.js"></script>
+	<script src="app/login/login.controller.js"></script>
+	<script src="app/login/login.js"></script>
+	<script src="app/login/logout-button.directive.js"></script>
+	<script src="app/main/main.controller.js"></script>
+	<script src="app/main/main.js"></script>
+	<script src="app/media/file/file.controller.js"></script>
+	<script src="app/media/file/file.js"></script>
+	<script src="app/media/folder/folder.controller.js"></script>
+	<script src="app/media/folder/folder.js"></script>
+	<script src="app/media/media.controller.js"></script>
+	<script src="app/media/media.js"></script>
+	<script src="app/modal/modal.service.js"></script>
+	<script src="app/navbar/navbar.controller.js"></script>
+	<script src="app/password-reset/password-reset.controller.js"></script>
+	<script src="app/password-reset/password-reset.js"></script>
+	<script src="app/popup/popup-alert.controller.js"></script>
+	<script src="app/popup/popup-prompt.controller.js"></script>
+	<script src="app/popup/popup.service.js"></script>
+	<script src="app/scripts/scripts.controller.js"></script>
+	<script src="app/scripts/scripts.js"></script>
+	<script src="app/search/search.controller.js"></script>
+	<script src="app/search/search.js"></script>
+	<script src="app/settings/settings.js"></script>
+	<script src="app/templates/templates.controller.js"></script>
+	<script src="app/templates/templates.js"></script>
+	<script src="app/types/types.controller.js"></script>
+	<script src="app/types/types.js"></script>
+	<script src="app/userSession/userSession.service.js"></script>
+	<script src="app/users/users.controller.js"></script>
+	<script src="app/users/users.js"></script>
+	<script src="app/variables/variables.controller.js"></script>
+	<script src="app/variables/variables.js"></script>
+	<!-- endinjector -->
 	<!-- endbuild -->
 	<script src="components/bootstrap/angular-bootstrap-checkbox.js"></script>
 	<script src="components/bootstrap/bootstrap.js"></script>
@@ -134,4 +133,5 @@
 	<script src="components/pace/pace.min.js"></script>
 	<script src="components/slimscroll/jquery.slimscroll.min.js"></script>
 </body>
+
 </html>

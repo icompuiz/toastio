@@ -56,53 +56,56 @@
 				.col-lg-12
 					label Folders
 				.col-lg-12
-					
-					.file-box(ng-repeat="folder in formdata.folders")
-						.file
-							span.corner
-							.file-name
-								//- a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
-								i.fa.fa-folder
-								a(ui-sref="media.folder({ folderid: folder._id })", title="Added: {{ folder.created | date }}")
-									|  {{ folder.name }}
-									br
-								small Added: {{ folder.created | date }}
-								.pull-right
-									.dropdown(dropdown="")
-										.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
-											i.fa.fa-chevron-down
-										ul.dropdown-menu.animated.fadeInRight
-											li
-												a(ui-sref="main.folder.edit({ folderid: folder._id })") Edit
-												a(ng-click="deleteFolder(folder)") Delete
+					.row.media.media-chunk(ng-repeat="chunk in foldersChunked")
+						.col-sm-4(ng-repeat="folder in chunk")
+							.file-box
+								.file
+									span.corner
+									.file-name
+										//- a(ng-href="/api/files/{{file._id}}/download?name={{file.name}}", target="_blank_{{file._id}}")
+										i.fa.fa-folder
+										a(ui-sref="media.folder({ folderid: folder._id })", title="Added: {{ folder.created | date }}")
+											|  {{ folder.name }}
+											br
+										small Added: {{ folder.created | date }}
+										.pull-right
+											.dropdown(dropdown="")
+												.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+													i.fa.fa-chevron-down
+												ul.dropdown-menu.animated.fadeInRight
+													li
+														a(ui-sref="main.folder.edit({ folderid: folder._id })") Edit
+														a(ng-click="deleteFolder(folder)") Delete
 			.row(ng-if="formdata.files.length")
 				.col-lg-12
 					label Files
 				.col-lg-12
-					.file-box(ng-repeat="file in formdata.files")
-						.file
-							span.corner
-							.icon(ng-if="!file.isImage && !file.isZip")
-								a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
-									i.fa.fa-file
-							.icon(ng-if="file.isZip")
-								a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
-									i.fa.fa-file-archive-o
-							.image(ng-if="file.isImage")
-								a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
-									img.file-explorer-image-preview.img-responsive(ng-src="/api/files/{{ file._id }}/download?v=small&name={{file.name}}")
-							.file-name
-								a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
-									| {{ file.name }}
-								br
-								small Added: {{ file.created | date }}
-								.pull-right
-									.dropdown(dropdown="")
-										.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
-											i.fa.fa-chevron-down
-										ul.dropdown-menu.animated.fadeInRight
-											li
-												a(ui-sref="files.textfiles.edit({ fileid: file._id })", ng-if="file.isText") Edit File
-												a(ng-click="extract(file)", ng-if="file.isZip") Extract Here
-												a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}") Download
-												a(ng-click="deleteFile(file)") Delete
+					.row.media.media-chunk(ng-repeat="chunk in filesChunked")
+						.col-sm-4(ng-repeat="file in chunk")
+							.file-box
+								.file
+									span.corner
+									.icon(ng-if="!file.isImage && !file.isZip")
+										a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
+											i.fa.fa-file
+									.icon(ng-if="file.isZip")
+										a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
+											i.fa.fa-file-archive-o
+									.image(ng-if="file.isImage")
+										a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
+											img.file-explorer-image-preview.img-responsive(ng-src="/api/files/{{ file._id }}/download?v=small&name={{file.name}}")
+									.file-name
+										a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}")
+											| {{ file.name }}
+										br
+										small Added: {{ file.created | date }}
+										.pull-right
+											.dropdown(dropdown="")
+												.btn.btn-xs.btn-link.dropdown-toggle(dropdown-toggle="")
+													i.fa.fa-chevron-down
+												ul.dropdown-menu.animated.fadeInRight
+													li
+														a(ui-sref="files.textfiles.edit({ fileid: file._id })", ng-if="file.isText") Edit File
+														a(ng-click="extract(file)", ng-if="file.isZip") Extract Here
+														a(ng-href="/tcms/{{ (path ? path + '/' : '') + file.name }}", target="_blank_{{file._id}}") Download
+														a(ng-click="deleteFile(file)") Delete

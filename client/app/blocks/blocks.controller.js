@@ -79,7 +79,7 @@ angular.module('toastio')
             styleActiveLine: true,
             theme: 'ambiance',
             indentWithTabs: true,
-            mode: 'jade'
+            mode: 'htmlmixed'
         };
 
         $scope.submit = function() {

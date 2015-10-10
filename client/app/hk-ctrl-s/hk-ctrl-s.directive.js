@@ -14,6 +14,12 @@ angular.module('toastio')
                     }
                 });
 
+                scope.$on('$destroy', function() {
+
+                    $hotkey.unbind('Ctrl + S');
+
+                });
+
             }
         };
     });

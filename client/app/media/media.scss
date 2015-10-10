@@ -9,3 +9,13 @@
 .dropdown-inline {
 	display: inline;
 }
+
+.media .file-box { 
+	/* Overrides */
+	width: 100% !important;
+	margin: 0 auto !important;
+}
+
+.media-chunk {
+	overflow: visible;
+}

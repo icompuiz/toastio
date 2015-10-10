@@ -13,6 +13,7 @@
 				.ibox.float-e-margins
 					.ibox-title 
 						.btn-toolbar.pull-right
+							a.btn.btn-xs.btn-white(popover-title="ISIOMA", popover-template="'calendar.html'") POPOVER
 							a.btn.btn-xs.btn-white(ng-click="cancel()") Cancel
 							button.btn.btn-xs.btn-primary(ng-disabled="saveState !== 'ready'", ng-class="{'btn-primary': saveState === 'ready', 'btn-success': saveState === 'success', 'btn-info': saveState === 'waiting', 'btn-danger': saveState === 'failed'}") {{ saveBtnText }}
 					.ibox-content
@@ -34,3 +35,6 @@
 								.col-md-12
 									label.control-label Full Name
 									input.form-control(type="text", placeholder="User's full name", ng-model="formdata.fullName")
+					.ibox-title 
+						.btn-toolbar.pull-right
+							a.btn.btn-xs.btn-danger(ng-click="delete()", ng-if="formdata._id && formdata._id !== main.session.user._id") Delete Account

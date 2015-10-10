@@ -212,7 +212,7 @@ angular.module('toastio')
                 $scope.formdata.properties = [];
             }
 
-            _($scope.documentType.properties).forEach(function(property) {
+            _.forEach($scope.documentType.properties, function(property) {
 
                 var exists = _.find($scope.formdata.properties, {
                     name: property.name

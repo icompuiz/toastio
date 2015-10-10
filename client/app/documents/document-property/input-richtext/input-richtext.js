@@ -9,7 +9,9 @@ angular.module('toastio').directive('inputRichtext', ['$compile',
             controller: ['$scope', function($scope) {
             	$scope.editorOptions = {
             		skin: 'moono',
-            		contentEditable: true
+            		contentEditable: true,
+                    extraAllowedContent: 'hr'
+
             	};
             }],
             templateUrl: 'app/documents/document-property/input-richtext/input-richtext.html'

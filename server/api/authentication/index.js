@@ -15,6 +15,10 @@ var routes = [{
 	method: 'POST',
 	middleware: AuthenticationController.logout
 }, {
+	path: '/password-reset',
+	method: 'POST',
+	middleware: AuthenticationController.resetPassword
+}, {
 	path: '/api/command/who',
 	middleware: components.commands.whoami,
 	method: 'GET'

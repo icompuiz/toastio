@@ -5,20 +5,15 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/toastio-dev',
-    sessionuri: 'mongodb://localhost/toastio-dev-session'
-  },
-  sequelize: {
-    uri: 'sqlite://',
-    options: {
-      logging: false,
-      storage: 'dev.sqlite',
-      define: {
-        timestamps: false
-      }
-    }
+    uri: 'mongodb://localhost/5m-ifendu',
+
+    sessionuri: 'mongodb://localhost/5m-ifendu-session'
+
+    // uri: 'mongodb://localhost/toastio-dev',
+    // sessionuri: 'mongodb://localhost/toastio-dev-session'
   },
 
   seedDB: true,
-  port: 9001
+  port: 8080
+  // port: 9001
 };

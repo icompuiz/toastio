@@ -126,6 +126,13 @@ angular.module('toastio')
 
         };
 
+        $scope.$watch('formdata.folders', function(folders) {
+            $scope.foldersChunked = _.chunk(folders, 3);
+        });
+        $scope.$watch('formdata.files', function(files) {
+            $scope.filesChunked = _.chunk(files, 3);
+        });
+
         reloadDirectory();
 
 

@@ -107,10 +107,20 @@ var NestableModelPlugin = function(schema, modelName, options) {
 
     options = options || {
         parent: 'parent',
-        children: 'children'
+        children: 'children',
     };
 
-    var schemaProps = {};
+    var schemaProps = {
+        hasChildren: {
+            type: Boolean,
+            default: true
+        },
+        alias: {
+            type: String,
+            default: '',
+            trim: true,
+        }
+    };
 
     schemaProps[options.parent] = {
         ref: modelName,
@@ -121,13 +131,6 @@ var NestableModelPlugin = function(schema, modelName, options) {
         ref: modelName,
         type: mongoose.Schema.Types.ObjectId
     }];
-
-
-    schemaProps.alias = {
-        type: String,
-        default: '',
-        trim: true,
-    };
 
     schema.add(schemaProps);
 

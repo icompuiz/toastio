@@ -4,7 +4,10 @@ var mongoose = require('mongoose'),
     vm = require('vm'),
     async = require('async'),
     lodash = require('lodash'),
-    jade = require('jade');
+    http = require('http'),
+    https = require('https'),
+    jade = require('jade'),
+    _ = lodash;
 
 var components = require('../../components');
 
@@ -30,7 +33,10 @@ var ScriptSchema = components.model.schema.extend({
     }
 });
 
-ScriptSchema.methods.execute = function(document, callback) {
+ScriptSchema.methods.execute = function(document, httpRequest, httpResponse, callback) {
+
+    var request = _.toPlainObject(httpRequest);
+    var response = _.toPlainObject(httpResponse);
 
     var script = this;
 
@@ -42,7 +48,7 @@ ScriptSchema.methods.execute = function(document, callback) {
         stopTimer();
     }
 
-    function sendOutput(err, outputDocument) {
+    function sendOutput(err, outputDocument, options) {
 
         var output = {
             name: script.name,
@@ -71,7 +77,7 @@ ScriptSchema.methods.execute = function(document, callback) {
             if (err) {
                 callback(err);
             } else if (block) {
-                
+
                 var asObject = lodash.toPlainObject(block);
 
                 asObject.compile = function(data) {
@@ -93,7 +99,7 @@ ScriptSchema.methods.execute = function(document, callback) {
             if (err) {
                 callback(err);
             } else if (script) {
-                
+
                 var asObject = lodash.toPlainObject(script);
                 asObject.execute = function() {
                     script.execute.apply(script, arguments);
@@ -107,7 +113,24 @@ ScriptSchema.methods.execute = function(document, callback) {
 
     }
 
-    function findDocument(conditions,  arg1, arg2) {
+    function createDocument(newDocument) {
+
+        var options = {};
+        var callback = function() {};
+        if (lodash.isFunction(arguments[1])) {
+            callback = arguments[1];
+        } else if (lodash.isObject(arguments[1])) {
+            options = arguments[1];
+            callback = arguments[2];
+        }
+
+        var Document = mongoose.model('Document');
+
+        Document.create(newDocument, callback);
+
+    }
+
+    function findDocument(conditions, arg1, arg2) {
 
         var options = {};
         var callback = function() {};
@@ -175,14 +198,19 @@ ScriptSchema.methods.execute = function(document, callback) {
     var sandbox = {
         '$start': initialize,
         '$end': sendOutput,
-        '$document': document,
+        '$document': document.toObject(),
         '$script': script,
         '$options': script.tag.options,
         '$console': console,
         '$Script': findScript,
-        '$Document': findDocument,
+        '$Find': findDocument,
+        '$Create': createDocument,
         '$Blocks': compileBlock,
-        '$utils': utils
+        '$utils': utils,
+        '$request': request,
+        '$response': response,
+        '$http': http,
+        '$https': https
     };
 
 

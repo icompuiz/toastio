@@ -17,12 +17,52 @@ var restful = require('node-restful');
 var ContentController = require('./content.controller');
 
 var routes = [{
-    path: '/:contentId([0-9a-fA-F]{24})',
+    path: '/:documentId([0-9a-fA-F]{24})',
+    method: 'GET',
+    middleware: [ContentController.viewById]
+},{
+    path: '/tc/:documentId([0-9a-fA-F]{24})',
     method: 'GET',
     middleware: [ContentController.viewById]
 }, {
     path: '/*',
     method: 'GET',
+    middleware: [ContentController.viewByPath]
+},{
+    path: '/:documentId([0-9a-fA-F]{24})',
+    method: 'POST',
+    middleware: [ContentController.viewById]
+},{
+    path: '/tc/:documentId([0-9a-fA-F]{24})',
+    method: 'POST',
+    middleware: [ContentController.viewById]
+}, {
+    path: '/*',
+    method: 'POST',
+    middleware: [ContentController.viewByPath]
+},{
+    path: '/:documentId([0-9a-fA-F]{24})',
+    method: 'PUT',
+    middleware: [ContentController.viewById]
+},{
+    path: '/tc/:documentId([0-9a-fA-F]{24})',
+    method: 'PUT',
+    middleware: [ContentController.viewById]
+}, {
+    path: '/*',
+    method: 'PUT',
+    middleware: [ContentController.viewByPath]
+},{
+    path: '/:documentId([0-9a-fA-F]{24})',
+    method: 'DELETE',
+    middleware: [ContentController.viewById]
+},{
+    path: '/tc/:documentId([0-9a-fA-F]{24})',
+    method: 'DELETE',
+    middleware: [ContentController.viewById]
+}, {
+    path: '/*',
+    method: 'DELETE',
     middleware: [ContentController.viewByPath]
 }];
 

@@ -54,7 +54,9 @@
 						.file
 							span.corner
 							.icon
-								a(ui-sref="documents.list({ documentid: document._id })")
+								a(ui-sref="documents.list({ documentid: document._id })", ng-if="document.hasChildren")
+									i.fa.fa-sitemap
+								a(ui-sref="documents.edit({ documentid: document._id })", ng-if="!document.hasChildren")
 									i.fa.fa-sitemap
 							.file-name
 								a(ui-sref="documents.edit({ documentid: document._id })")

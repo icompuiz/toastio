@@ -31,7 +31,8 @@ var FileSystemItemSchema = new Schema({
         default: 'folder',
         trim: true,
         require: true
-    }
+    },
+    meta: {}
 }, {
     collection: 'filesystemitems',
     discriminatorKey: '_class'

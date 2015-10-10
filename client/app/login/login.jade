@@ -11,5 +11,5 @@
 						.form-group(ng-class="{'has-error': loginState === 'failed'}")
 							input.form-control(type='password', placeholder='Password', required='', ng-model="user.password")    
 						button.btn.btn-primary.block.full-width.m-b(ng-disabled="loginState !== 'ready'", ng-class="{'btn-primary': loginState === 'ready', 'btn-success': loginState === 'success', 'btn-info': loginState === 'waiting', 'btn-danger': loginState === 'failed'}") {{ loginBtnText }}
-						a(href='#')
-							small Forgot password?
+						//- a(ui-sref='password-reset')
+						//- 	small Forgot password?

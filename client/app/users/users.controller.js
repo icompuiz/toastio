@@ -48,9 +48,10 @@ angular.module('toastio')
         _loadUser();
 
     })
-    .controller('UsersEditCtrl', function($scope, $state, $timeout, $stateParams, $log, Restangular) {
+    .controller('UsersEditCtrl', function($scope, $state, $timeout, $stateParams, $log, Restangular, PopupSvc) {
 
         var _loadUser = angular.noop;
+        _.set($scope, 'popover.templateUrl', 'test.html');
 
         function onUserLoaded(userDoc) {
 
@@ -129,7 +130,7 @@ angular.module('toastio')
 
                     $scope.saveState = 'failed';
                     $scope.saveBtnText = 'See below for error details.';
-                    
+
                     $timeout(function() {
                         $scope.saveState = 'ready';
                         $scope.saveBtnText = saveBtnText;
@@ -143,10 +144,15 @@ angular.module('toastio')
 
         $scope.delete = function() {
 
-            $scope.formdata.remove().then(function() {
-                $state.go('users.list');
+            PopupSvc.confirm('Are you sure? This action is irreversible.').then(function(confirmed) {
+                if (confirmed) {
+                    PopupSvc.confirm('This user account will be deleted. Press OK to coninue.').then(function(confirmed) {
+                        $scope.formdata.remove().then(function() {
+                            $state.go('users.list');
+                        });
+                    });
+                }
             });
-
 
         };
 
