@@ -46,10 +46,10 @@ module.exports.public = {
 };
 
 module.exports.all = [{
-	username: 'isioma.nnodum@gmail.com',
+	username: 'administrator',
 	groups: ['administrators'],
-	password: 'isioma',
-	fullName: 'Isioma Nnodum',
+	password: 'administrator',
+	fullName: 'Administrator',
 	organization: null,
 	comments: null,
 	address: {
