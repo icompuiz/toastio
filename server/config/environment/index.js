@@ -26,8 +26,8 @@ var all = {
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {
-    session: 'toastio-gui-secret',
-    cookie: 'toastio-gui-cookie-secret'
+    session: '<change me to something secret>',
+    cookie: '<change me to something secret>'
   },
   // MongoDB connection options
   mongo: {
