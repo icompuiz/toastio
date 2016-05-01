@@ -20,7 +20,7 @@
     - example
     ```
       {
-        username: 'administrator',
+        username: 'administrator@admin.com', // The email format is necessary in order to log in :/
         groups: ['administrators'],
         password: 'administrator',
         fullName: 'Administrator',
