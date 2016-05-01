@@ -46,7 +46,7 @@ module.exports.public = {
 };
 
 module.exports.all = [{
-	username: 'administrator',
+	username: 'administrator@admin.com',
 	groups: ['administrators'],
 	password: 'administrator',
 	fullName: 'Administrator',
