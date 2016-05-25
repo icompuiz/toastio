@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     http = require('http'),
     https = require('https'),
     jade = require('jade'),
+    moment = require('moment'),
     _ = lodash;
 
 var components = require('../../components');
@@ -15,7 +16,8 @@ var utils = {
     _: lodash,
     lodash: lodash,
     async: async,
-    jade: jade
+    jade: jade,
+    moment: moment
 };
 
 require('mongoose-schema-extend');
